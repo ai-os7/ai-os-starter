@@ -1,0 +1,86 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(~/Documents/Second-Brain/**)",
+      "Glob(~/Documents/Second-Brain/**)",
+      "Grep(~/Documents/Second-Brain/**)",
+      "Bash(ls ~/Documents/Second-Brain/**)",
+      "Bash(ls ~/Documents/Second-Brain/**)",
+      "Bash(find ~/Documents/Second-Brain/**)",
+      "Bash(find ~/Documents/Second-Brain/**)",
+      "Bash(wc -l ~/Documents/Second-Brain/**)",
+      "Bash(wc -l ~/Documents/Second-Brain/**)",
+      "Bash(tail:*)",
+      "Bash(head:*)",
+      "Bash(awk:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/gsd-check-update.js\""
+          },
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/session-init.sh\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/vault-write-guard.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/bash_safety_check.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/focus-alert.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "permission_prompt|idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/focus-alert.sh\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node \"$HOME/.claude/hooks/gsd-statusline.js\""
+  },
+  "env": {
+    "_COMMENT": "Add your env vars here. Example: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: 1"
+  }
+}

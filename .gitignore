@@ -1,0 +1,30 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Backup files created by bootstrap.sh
+*.bak.*
+
+# Runtime logs
+safety.log
+*.log
+
+# IDE
+.idea/
+.vscode/
+
+# CRITICAL: Claude OAuth-Token-Datei - NIEMALS ins Repo!
+# Diese Datei liegt unter ~/.claude.json (ohne Dot-Ordner) und enthält Auth-Tokens.
+.claude.json
+**/.claude.json
+*/.claude.json
+
+# Environment / Secrets
+.env
+.env.*
+secrets/
+*.secret
+
+# Node modules (falls jemand npm init macht)
+node_modules/
