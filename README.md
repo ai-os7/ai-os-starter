@@ -1,6 +1,6 @@
-# AI Mastermind — AI Operating System Starter
+# AI Operating System Workshop — Starter
 
-Dieses Repository enthält das AI Operating System Setup für Workshop-Teilnehmer des **AI Mastermind Workshops** von Affom Birhane.
+Dieses Repository enthält das AI Operating System Setup für Teilnehmer des **AI Operating System Workshops** von Affom Birhane.
 
 Nach dem Setup hast du ein vollständiges, persönliches AI-OS: Claude Code mit vorbereiteten globalen Instructions, Slash-Commands, Hooks, und einem Obsidian Second Brain.
 
@@ -174,4 +174,4 @@ ai-os-starter/
 
 ## Lizenz
 
-Für Workshop-Teilnehmer des AI Mastermind Workshops. Nicht für Weiterverteilung ohne Erlaubnis.
+Für Teilnehmer des AI Operating System Workshops. Nicht für Weiterverteilung ohne Erlaubnis.
