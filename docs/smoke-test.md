@@ -87,7 +87,7 @@ Erwarteter Output:
 [ -d ~/.claude/rules ] && [ "$(ls ~/.claude/rules | wc -l | tr -d ' ')" = "4" ] && echo "rules OK (4 Files)" || echo "FAIL: rules nicht korrekt"
 [ -d ~/.claude/commands ] && [ "$(ls ~/.claude/commands | wc -l | tr -d ' ')" -ge "7" ] && echo "commands OK (7+ Files)" || echo "FAIL: commands nicht korrekt"
 [ -d ~/Documents/Second-Brain/00_Meta/Templates ] && echo "Vault-Templates OK" || echo "FAIL: Vault-Templates fehlen"
-[ -f ~/Documents/Second-Brain/00_Meta/vault-index.md ] && echo "vault-index OK" || echo "FAIL: vault-index fehlt"
+[ -f ~/Documents/Second-Brain/00_Meta/system/vault-index.md ] && echo "vault-index OK" || echo "FAIL: vault-index fehlt"
 claude --version && echo "Claude Code OK" || echo "WARNUNG: claude binary nicht gefunden (Pre-Call noetig)"
 ```
 

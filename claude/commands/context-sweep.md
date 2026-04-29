@@ -4,7 +4,7 @@ Du bist ein Wissens-Kurator. Raeume die Inbox auf und sortiere Inhalte in die ri
 
 ## Voraussetzung
 
-`00_Meta/vault-index.md` muss existieren (TSV-Index aller Vault-Dateien). Falls nicht: STOP, dem User `/vault-reindex` empfehlen. Details zum Index in `~/.claude/rules/vault-workflow.md` (Abschnitt "Vault Index").
+`00_Meta/system/vault-index.md` muss existieren (TSV-Index aller Vault-Dateien). Falls nicht: STOP, dem User `/vault-reindex` empfehlen. Details zum Index in `~/.claude/rules/vault-workflow.md` (Abschnitt "Vault Index").
 
 ## Delegation-Protocol
 
@@ -53,13 +53,13 @@ Main buendelt TSV-Patches + Hub-Proposals (1-2 Edits statt N), stellt Open Quest
 - Erwartetes Dateiformat: `YYYY-MM-DD-[beschreibung].md`
 
 ### 1.5. Vault-Index pruefen (NICHT laden!)
-- `00_Meta/vault-index.md` muss existieren. Wenn nicht: STOP, `/vault-reindex` empfehlen.
+- `00_Meta/system/vault-index.md` muss existieren. Wenn nicht: STOP, `/vault-reindex` empfehlen.
 - **Lade den Index NIE komplett in den Kontext.** Stattdessen: gezielte `grep`-Queries pro Lookup-Bedarf in den naechsten Schritten.
 - Query-Muster:
-  - Alias-Lookup: `grep -i "alias-text" 00_Meta/vault-index.md`
-  - Topic-Lookup: `grep "topic-name" 00_Meta/vault-index.md`
-  - Person-Lookup: `grep "	person	" 00_Meta/vault-index.md | grep -i "name"`
-  - Projekt-Lookup: `grep "	project	" 00_Meta/vault-index.md`
+  - Alias-Lookup: `grep -i "alias-text" 00_Meta/system/vault-index.md`
+  - Topic-Lookup: `grep "topic-name" 00_Meta/system/vault-index.md`
+  - Person-Lookup: `grep "	person	" 00_Meta/system/vault-index.md | grep -i "name"`
+  - Projekt-Lookup: `grep "	project	" 00_Meta/system/vault-index.md`
 
 ### 2. Triage (mit Duplikat-Erkennung)
 Pro Inbox-Datei:
@@ -67,7 +67,7 @@ Pro Inbox-Datei:
 - **Veraltet/irrelevant:** User fragen (loeschen oder archivieren).
 - **Duplikat-Check:**
   - Inbox untereinander: aehnliche Titel, Person in anderer Schreibweise, gleiches Thema in mehreren Sessions → mergen.
-  - Inbox gegen Vault via TSV-grep: `grep "	person	" 00_Meta/vault-index.md | grep -i "name"`, `grep "topic-x" 00_Meta/vault-index.md`.
+  - Inbox gegen Vault via TSV-grep: `grep "	person	" 00_Meta/system/vault-index.md | grep -i "name"`, `grep "topic-x" 00_Meta/system/vault-index.md`.
 
 Bei Unsicherheit IMMER User fragen (Namen, Personen, Decision-Ueberlappung). Keine eigenmaechtigen Merges.
 
@@ -124,7 +124,7 @@ Meetings, die `/sync-meetings` als **unklar** klassifiziert hat (gleicher Titel,
 Zum Bewegen `mv` nutzen, nicht Read+Write+Delete.
 
 ### 6.5. Vault-Index inkrementell patchen
-Fuer jede in Schritt 6 bewegte/neu angelegte/geloeschte Datei: `00_Meta/vault-index.md` gezielt updaten.
+Fuer jede in Schritt 6 bewegte/neu angelegte/geloeschte Datei: `00_Meta/system/vault-index.md` gezielt updaten.
 
 - **Neue Datei:** TSV-Zeile in den Code-Block appendieren mit Spalten `path	title	type	tags	aliases	topics	updated`. Topics inhaltlich vergeben (max 3, lowercase, bindestrich-separiert, konsistent mit bestehenden Topics, also vorher `grep` ob aehnliches Topic schon existiert).
 - **Verschobene Datei:** Bestehende Zeile finden (`grep`), `path`-Spalte updaten via `Edit`.
@@ -166,7 +166,7 @@ Danach `propagated_to_state: true` im Meeting-File setzen — auch wenn alle Ite
 ### 6.8. Entity-Update-Propagation (Karpathy-Pattern)
 Nach Einsortierung jeder Datei: pruefe via TSV-Topic-Lookup, welche Entity-Pages (`type: project|person|concept|area`) zum Thema gehoeren, und ergaenze dort den Link in der passenden Sektion.
 
-- `grep "topic-x" 00_Meta/vault-index.md | grep "	project	"` zeigt verwandte Projekt-Index-Dateien
+- `grep "topic-x" 00_Meta/system/vault-index.md | grep "	project	"` zeigt verwandte Projekt-Index-Dateien
 - Pro betroffener Entity: Read der Entity-Page, pruefen ob Link bereits existiert, sonst ergaenzen
 - **Link-Target:** passende Sektion nach Typ der Inbox-Datei:
   - `decision` → `## Decisions` (anlegen wenn nicht vorhanden)
@@ -229,7 +229,7 @@ Fuer jede im Sweep verarbeitete Datei mit `type: decision|learning` + `project/<
 5. Max 3 Vorschlaege pro Sweep. Weitere im Report listen.
 
 ### 9. Vault-Log Eintrag
-Append an `00_Meta/vault-log.md`:
+Append an `00_Meta/system/vault-log.md`:
 ```
 ## [YYYY-MM-DD] sweep | N files ingested ([projekt: X, projekt: Y, ...]), M merges, K extracted, L drift-warnings
 ```

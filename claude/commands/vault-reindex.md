@@ -1,6 +1,6 @@
 # /vault-reindex — Vault-Index komplett neu aufbauen
 
-Du baust den maschinen-gepflegten Vault-Index `00_Meta/vault-index.md` from scratch neu auf. Wird genutzt bei Erstinstallation, Drift-Verdacht oder als woechentliche Wartung.
+Du baust den maschinen-gepflegten Vault-Index `00_Meta/system/vault-index.md` from scratch neu auf. Wird genutzt bei Erstinstallation, Drift-Verdacht oder als woechentliche Wartung.
 
 ## Wichtig: Sub-Agent fuer den Scan (PFLICHT)
 
@@ -18,8 +18,15 @@ Hintergrund: Folgt dem `Batch-Delegation mit Report-Only-Return`-Pattern des `sk
 
 1. **Vault scannen**
    - `find ~/Documents/Second-Brain -name "*.md" -type f` ausfuehren
-   - Ausschliessen: `01_Inbox/**`, `00_Meta/Templates/**`, `00_Meta/vault-index.md`, `00_Meta/vault-log.md`, `00_Meta/lint-reports/**`, `.obsidian/**`, `.trash/**`
+   - Ausschliessen: `01_Inbox/**`, `00_Meta/Templates/**`, `00_Meta/system/vault-index.md`, `00_Meta/system/vault-log.md`, `00_Meta/system/lint-reports/**`, `.obsidian/**`, `.trash/**`
    - Anzahl ermitteln (`wc -l`)
+
+1.5. **Backup**
+   - Wenn `00_Meta/system/vault-index.md` existiert: `cp 00_Meta/system/vault-index.md 00_Meta/system/backups/vault-index.md.bak.YYYY-MM-DD`
+   - Wenn der Backup-Ordner fehlt: `mkdir -p 00_Meta/system/backups` zuerst
+   - Wenn alter Index nicht existiert (Erstinstallation): skip
+   - Backup-Pfad im Final-Bericht erwaehnen
+   - Garbage-Collection optional: alte `.bak.*` Files > 30 Tage manuell pruefen, kein Auto-Delete
 
 2. **Frontmatter-Extraktion via Sub-Agent**
    Spawn einen `general-purpose` Sub-Agent mit folgendem Auftrag:
@@ -37,10 +44,10 @@ Hintergrund: Folgt dem `Batch-Delegation mit Report-Only-Return`-Pattern des `sk
 3. **Index-Datei schreiben**
    - Header-Frontmatter setzen: `updated: <heute>`, `file_count: <N>`
    - TSV-Header-Zeile + alle Datenzeilen in den ```tsv Code-Block schreiben
-   - Komplette Ueberschreibung von `00_Meta/vault-index.md`
+   - Komplette Ueberschreibung von `00_Meta/system/vault-index.md`
 
 4. **Vault-Log Eintrag**
-   - Append an `00_Meta/vault-log.md`:
+   - Append an `00_Meta/system/vault-log.md`:
      `## [YYYY-MM-DD] reindex | full rebuild, N files, M unique topics`
 
 5. **Bericht**
@@ -48,8 +55,9 @@ Hintergrund: Folgt dem `Batch-Delegation mit Report-Only-Return`-Pattern des `sk
    === VAULT REINDEX FERTIG ===
    Dateien indiziert: N
    Unique Topics: M
-   Index: 00_Meta/vault-index.md
-   Log: vault-log.md aktualisiert
+   Index:   00_Meta/system/vault-index.md
+   Backup:  00_Meta/system/backups/vault-index.md.bak.YYYY-MM-DD (alter Index, manuell loeschen wenn nicht mehr noetig)
+   Log:     vault-log.md aktualisiert
    ```
 
 ## Regeln

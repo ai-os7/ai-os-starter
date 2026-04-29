@@ -62,7 +62,7 @@ Du bist ein Session-Archivar. Sichere das Wissen dieser Session im Second Brain.
     Skip-Bedingung: Wenn keine STATE.md existiert, Schritt ueberspringen.
 
 5.3 **Vault-Log Eintrag**
-    Append eine Zeile an `~/Documents/Second-Brain/00_Meta/vault-log.md`:
+    Append eine Zeile an `~/Documents/Second-Brain/00_Meta/system/vault-log.md`:
     ```
     ## [YYYY-MM-DD] compress | <projekt-slug>: N inbox-files written, <one-line-summary>
     ```

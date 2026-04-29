@@ -18,7 +18,7 @@ oder Fix-Rezept das in die Commit-Message gehoert.
 STRUKTUR: Context (was war das Problem) | Pattern/Solution (was funktioniert)
           | Why (warum funktioniert es) | When to Apply (wann wieder relevant).
 CLUSTER-TAG: Darf beim Capture gesetzt werden, WENN die Zuordnung eindeutig ist
-(klares Thema, passender Slug aus 00_Meta/vault-clusters.md, Ziel-Projekt ist
+(klares Thema, passender Slug aus 00_Meta/clusters/vault-clusters.md, Ziel-Projekt ist
 clustered oder scope ist cross-project). Bei Unsicherheit leer lassen —
 /context-sweep ergaenzt beim Einsortieren. Flat-Projekte bekommen keinen cluster-Tag.
 TOPICS: semantische Schlagworte als Array, freitext und granularer als Cluster

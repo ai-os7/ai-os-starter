@@ -116,7 +116,7 @@ if [ -n "$PROJECT_SLUG" ] && [ -d "$VAULT" ]; then
 fi
 
 # --- Footer ---
-echo "INFO: Volltext via 'grep \"<Title>\" ~/Documents/Second-Brain/00_Meta/vault-index.md' + Read."
+echo "INFO: Volltext via 'grep \"<Title>\" ~/Documents/Second-Brain/00_Meta/system/vault-index.md' + Read."
 echo "=== END SESSION CONTEXT ==="
 
 exit 0

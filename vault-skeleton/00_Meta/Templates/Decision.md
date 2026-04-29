@@ -19,7 +19,7 @@ STRUKTUR: Entscheidung (was) | Why (Begruendung, Incident/Deadline)
           | How to apply (wann Regel wieder greifen) | Alternatives
           | Konsequenzen.
 CLUSTER-TAG: Darf beim Capture gesetzt werden, WENN die Zuordnung eindeutig ist
-(klares Thema, passender Slug aus 00_Meta/vault-clusters.md, Ziel-Projekt ist
+(klares Thema, passender Slug aus 00_Meta/clusters/vault-clusters.md, Ziel-Projekt ist
 clustered oder scope ist cross-project). Bei Unsicherheit leer lassen —
 /context-sweep ergaenzt beim Einsortieren. Flat-Projekte bekommen keinen cluster-Tag.
 -->

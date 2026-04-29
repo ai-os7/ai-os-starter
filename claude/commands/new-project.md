@@ -177,7 +177,7 @@ Optional naechster Schritt:
 - **Freeform-Extraktion aus Phase 0.5:** so viele Felder wie moeglich ableiten, nicht erneut fragen. Bei Unsicherheit (z.B. Typ nicht klar ableitbar): lieber nachfragen als falsch setzen.
 - **Ueberschreiben-Option in Phase 0:** erfordert explizite zweite Confirm-Zeile mit Datei-Liste.
 - **Abbruch jederzeit:** User kann "skip", "spaeter" oder "weiter" sagen. Fehlende Felder werden `[TODO]`.
-- **Neue Vault-Notiz** wird beim naechsten `/context-sweep` automatisch in `00_Meta/vault-index.md` aufgenommen. Kein manueller Reindex.
+- **Neue Vault-Notiz** wird beim naechsten `/context-sweep` automatisch in `00_Meta/system/vault-index.md` aufgenommen. Kein manueller Reindex.
 
 ## Templates
 

@@ -284,16 +284,20 @@ install_vault_skeleton() {
     echo ""
   fi
 
-  # Create PARA directories
+  # Create PARA directories (00_Meta restrukturiert 2026-04-29:
+  #   clusters/ = semantisches Cluster-Konzept, system/ = Maschinen-State)
   if [ "$DRY_RUN" -eq 0 ]; then
     mkdir -p "$VAULT_DIR/00_Meta/Templates"
+    mkdir -p "$VAULT_DIR/00_Meta/clusters"
+    mkdir -p "$VAULT_DIR/00_Meta/system/lint-reports"
+    mkdir -p "$VAULT_DIR/00_Meta/system/backups"
     mkdir -p "$VAULT_DIR/01_Inbox"
     mkdir -p "$VAULT_DIR/02_Projects"
     mkdir -p "$VAULT_DIR/03_Areas"
     mkdir -p "$VAULT_DIR/05_People"
     mkdir -p "$VAULT_DIR/06_Resources"
   else
-    drylog "WUERDE mkdir -p: $VAULT_DIR/{00_Meta/Templates,01_Inbox,02_Projects,03_Areas,05_People,06_Resources}"
+    drylog "WUERDE mkdir -p: $VAULT_DIR/{00_Meta/{Templates,clusters,system/{lint-reports,backups}},01_Inbox,02_Projects,03_Areas,05_People,06_Resources}"
   fi
 
   # Templates (copy_if_absent — niemals ueberschreiben)
@@ -302,13 +306,13 @@ install_vault_skeleton() {
     copy_if_absent "$tmpl_file" "$VAULT_DIR/00_Meta/Templates/$(basename "$tmpl_file")"
   done
 
-  # Vault meta files (copy_if_absent)
-  copy_if_absent "$REPO_DIR/vault-skeleton/00_Meta/vault-index.md" \
-                 "$VAULT_DIR/00_Meta/vault-index.md"
-  copy_if_absent "$REPO_DIR/vault-skeleton/00_Meta/vault-log.md" \
-                 "$VAULT_DIR/00_Meta/vault-log.md"
-  copy_if_absent "$REPO_DIR/vault-skeleton/00_Meta/vault-clusters.md.template" \
-                 "$VAULT_DIR/00_Meta/vault-clusters.md.template"
+  # Vault meta files (copy_if_absent) — neue Pfade nach Restrukturierung
+  copy_if_absent "$REPO_DIR/vault-skeleton/00_Meta/system/vault-index.md" \
+                 "$VAULT_DIR/00_Meta/system/vault-index.md"
+  copy_if_absent "$REPO_DIR/vault-skeleton/00_Meta/system/vault-log.md" \
+                 "$VAULT_DIR/00_Meta/system/vault-log.md"
+  copy_if_absent "$REPO_DIR/vault-skeleton/00_Meta/clusters/vault-clusters.md.template" \
+                 "$VAULT_DIR/00_Meta/clusters/vault-clusters.md.template"
 }
 
 # =============================================================================

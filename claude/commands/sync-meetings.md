@@ -28,7 +28,7 @@ Du synchronisierst Fathom-Meetings in den Obsidian-Vault unter `/Users/affombirh
 
 1. `created_after` bestimmen (Prioritaet absteigend):
    a. Skill-Argument (ISO 8601) → `source=argument`.
-   b. `Read` auf absoluten Pfad `/Users/affombirhane/Documents/Second-Brain/00_Meta/.last-fathom-sync` (Scheduled Task hat keine CWD). Datei = eine Zeile ISO 8601 → `source=last-sync`. Bei ENOENT oder Format-Fehler: weiter zu (c), nicht silent.
+   b. `Read` auf absoluten Pfad `/Users/affombirhane/Documents/Second-Brain/00_Meta/system/.last-fathom-sync` (Scheduled Task hat keine CWD). Datei = eine Zeile ISO 8601 → `source=last-sync`. Bei ENOENT oder Format-Fehler: weiter zu (c), nicht silent.
    c. `date -u -v-7d +"%Y-%m-%dT%H:%M:%SZ"` → `source=fallback-7d`.
 
    Report PFLICHT: `Sync-Stand-Quelle: <source>`.
@@ -46,7 +46,7 @@ Du synchronisierst Fathom-Meetings in den Obsidian-Vault unter `/Users/affombirh
 
 ## Schritt 3, Vault-Kontext laden (einmalig)
 
-- Personen: `ls 05_People/People/ 05_People/Organizations/` + aus `vault-index.md` Aliases (`awk -F'\t' '$3=="person" || $3=="organization"'`).
+- Personen: `ls 05_People/People/ 05_People/Organizations/` + aus `00_Meta/system/vault-index.md` Aliases (`awk -F'\t' '$3=="person" || $3=="organization"'`).
 - Projekte: aus jedem `02_Projects/<slug>/<slug>.md` Titel + `aliases:` aus Frontmatter.
 
 ## Schritt 4, Delegation + Sortierung
@@ -136,7 +136,7 @@ Nur bei klar entschiedenen (nicht angedacht/vertagt) Punkten eigene Datei `01_In
 
 ### 5g Inkrementeller Timestamp-Write (PFLICHT, nach jedem Meeting)
 
-Sofort nach erfolgreichem 5a-e Write des Meeting-Files: `00_Meta/.last-fathom-sync` mit dem `created_at` (ISO 8601 UTC) des **gerade verarbeiteten** Meetings ueberschreiben. **Ein Edit pro Meeting.**
+Sofort nach erfolgreichem 5a-e Write des Meeting-Files: `00_Meta/system/.last-fathom-sync` mit dem `created_at` (ISO 8601 UTC) des **gerade verarbeiteten** Meetings ueberschreiben. **Ein Edit pro Meeting.**
 
 Begruendung: Wenn das Skill mittendrin abbricht (Tool-Fehler, Context-Limit, Scheduled-Task-Kill), ist der Timestamp dennoch auf dem Stand des letzten erfolgreich verarbeiteten Meetings. Naechster Run holt nur das, was wirklich noch fehlt. **Schritt 6 wird dadurch zum Sanity-Check, nicht zum sole-write.**
 
@@ -173,7 +173,7 @@ Danach `propagated_to_state: true` im Meeting-File setzen (auch wenn alle Items 
 
 Schritt 5g hat den Timestamp inkrementell nach jedem Meeting geschrieben. Hier nur Final-Verification:
 
-1. `Read` auf `00_Meta/.last-fathom-sync`.
+1. `Read` auf `00_Meta/system/.last-fathom-sync`.
 2. Vergleiche mit `created_at` des juengsten verarbeiteten Meetings.
 3. **Match** → OK, nichts zu tun.
 4. **Mismatch (z.B. weil 5g uebersprungen wurde)** → letzte Korrektur: Edit `.last-fathom-sync` auf den juengsten verarbeiteten Wert + im Report `Sync-Timestamp-Korrektur in Schritt 6` vermerken.

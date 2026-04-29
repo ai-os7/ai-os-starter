@@ -41,7 +41,7 @@ decision, learning, session-log, person, concept, meeting, project, organization
 
 **Templates:** `00_Meta/Templates/`, neue Vault-Dateien IMMER via Template.
 **Decision Validity:** `validity: active|superseded|archived`, nur active in Kontext laden.
-**Vault-Index:** `00_Meta/vault-index.md` (TSV, grep-basiert) und `00_Meta/vault-log.md` (append-only Timeline) werden von `/context-sweep`, `/vault-reindex`, `/vault-lint` gepflegt. Details in `vault-workflow.md`.
+**Vault-Index:** `00_Meta/system/vault-index.md` (TSV, grep-basiert) und `00_Meta/system/vault-log.md` (append-only Timeline) werden von `/context-sweep`, `/vault-reindex`, `/vault-lint` gepflegt. Details in `vault-workflow.md`.
 
 ## Session Ende
 

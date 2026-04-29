@@ -4,7 +4,7 @@ Du fuehrst einen Health-Check des Vaults durch, schreibst einen Report, und biet
 
 ## Voraussetzung
 
-`00_Meta/vault-index.md` muss existieren und aktuell sein. Falls Drift-Verdacht: zuerst `/vault-reindex` empfehlen.
+`00_Meta/system/vault-index.md` muss existieren und aktuell sein. Falls Drift-Verdacht: zuerst `/vault-reindex` empfehlen.
 
 ## Checks
 
@@ -25,7 +25,7 @@ Fuehre alle Checks via `grep` und gezielte Sub-Agent-Reads aus, NIE den ganzen V
 
 ### 3. Stale Decisions
 
-- `grep "	decision	" 00_Meta/vault-index.md` plus Frontmatter-Check auf `validity: active` und `updated` aelter als 90 Tage
+- `grep "	decision	" 00_Meta/system/vault-index.md` plus Frontmatter-Check auf `validity: active` und `updated` aelter als 90 Tage
 - Liste der Stale-Kandidaten zur User-Review
 
 ### 4. Missing Cross-Refs
@@ -59,7 +59,7 @@ Wenn `project-repos.yaml` gar nicht existiert: Check ueberspringen, nicht als Fe
 
 ## Output
 
-Schreibe Report nach `~/Documents/Second-Brain/00_Meta/lint-reports/YYYY-MM-DD-lint.md`:
+Schreibe Report nach `~/Documents/Second-Brain/00_Meta/system/lint-reports/YYYY-MM-DD-lint.md`:
 
 ```markdown
 ---
@@ -138,7 +138,7 @@ Nach dem Report Summary zeigen und dann pro Kategorie mit Issues den User fragen
 - Bei Hub-Page-Kandidaten: bevorzuge Ergaenzung in Hub-Page (einseitig reicht oft).
 
 **Orphans**
-- Hub-Page per TSV-Topic-Match ermitteln: `grep "topic-x" 00_Meta/vault-index.md | grep "	project\|	area	"`
+- Hub-Page per TSV-Topic-Match ermitteln: `grep "topic-x" 00_Meta/system/vault-index.md | grep "	project\|	area	"`
 - Bei **einem** passenden Hub: Link automatisch in passende Sektion (`## Decisions`/`## Sessions`/`## Meetings`/`## Learnings`, anlegen wenn nicht vorhanden), Format `- [[basename|title]] — (YYYY-MM-DD)`, chronologisch sortiert (neueste zuerst).
 - Bei **mehreren** passenden Hubs: pro Issue User fragen welche Hub-Page.
 - Bei **keinem** passenden Hub: als "accepted orphan" im Report markieren, keine Aktion.
@@ -165,12 +165,12 @@ Detected: N (Drift: x, Repos-Drift: d, Broken: y, Missing-Refs: z, Orphans: a, S
 Fixed:    M
 Skipped:  K (by user)
 Remaining: L
-Report:   00_Meta/lint-reports/YYYY-MM-DD-lint.md
+Report:   00_Meta/system/lint-reports/YYYY-MM-DD-lint.md
 ```
 
 ## Vault-Log Eintrag
 
-Append an `00_Meta/vault-log.md`:
+Append an `00_Meta/system/vault-log.md`:
 `## [YYYY-MM-DD] lint | N detected, M fixed, K skipped`
 
 ## Regeln

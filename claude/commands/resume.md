@@ -30,10 +30,10 @@ Du bist ein Kontext-Restaurator. Stelle den vollstaendigen Arbeitskontext fuer d
    - Zeige das juengste Meeting (Titel, Datum, Zusammenfassung)
 
 5.5 **Vault-Timeline laden (cross-projekt Kontext)**
-    - `00_Meta/vault-log.md` via **Read-Tool** lesen (nicht Bash/cat). Read ist von der globalen `Read(...Second-Brain/**)` Permission gedeckt. Bei langer Datei `offset` ans Ende setzen, sodass die letzten ~10 Zeilen erscheinen.
+    - `00_Meta/system/vault-log.md` via **Read-Tool** lesen (nicht Bash/cat). Read ist von der globalen `Read(...Second-Brain/**)` Permission gedeckt. Bei langer Datei `offset` ans Ende setzen, sodass die letzten ~10 Zeilen erscheinen.
     - Zeige: was wurde im Vault zuletzt gemacht (Sweeps, Reindex, Lint, Compress aus anderen Projekten)
     - Das ist Cross-Session- und Cross-Projekt-Kontext, der unabhaengig vom aktuellen Projekt-Tag relevant sein kann
-    - Wenn `vault-log.md` nicht existiert: kurz melden, weiter machen
+    - Wenn `system/vault-log.md` nicht existiert: kurz melden, weiter machen
 
 6. **Zusammenfassung ausgeben**
    Format:

@@ -7,7 +7,7 @@
 
 ### Session-Start-Import
 
-@~/Documents/Second-Brain/00_Meta/vault-clusters.md
+@~/Documents/Second-Brain/00_Meta/clusters/vault-clusters.md
 
 Die Landkarte enthaelt aktive Projekte/Scopes, ihren Zustand (flat vs clustered) und die aktiven Cluster mit Keyword-Triggern. Cache — Quelle der Wahrheit sind die `cluster/*`-Tags in den Dateien.
 
@@ -26,7 +26,7 @@ Bei jeder User-Aufgabe mit Learnings/Decisions-Bezug:
 
 ### Capture-Verhalten bei cluster-Tag
 
-- **Eindeutige Zuordnung** (klares Thema, passender Slug aus `00_Meta/vault-clusters.md`, Ziel-Projekt clustered oder `scope/cross-project`) → `cluster/<slug>` direkt im Frontmatter.
+- **Eindeutige Zuordnung** (klares Thema, passender Slug aus `00_Meta/clusters/vault-clusters.md`, Ziel-Projekt clustered oder `scope/cross-project`) → `cluster/<slug>` direkt im Frontmatter.
 - **Unklar** → leer lassen, `/context-sweep` ergaenzt beim Einsortieren.
 - **Ziel-Projekt flat** (< 30 Eintraege) → kein cluster-Tag.
 
@@ -113,7 +113,7 @@ TRIGGER: Kontext wird unabhaengig vom aktuellen Ticket wieder relevant (Geschaef
 
 Vor neuer Decision/Learning:
 ```bash
-grep -i "<topic-keyword>" ~/Documents/Second-Brain/00_Meta/vault-index.md
+grep -i "<topic-keyword>" ~/Documents/Second-Brain/00_Meta/system/vault-index.md
 ```
 Wenn aehnlich existiert: bestehende ergaenzen oder auf `validity: superseded` setzen, nicht duplizieren.
 
@@ -127,7 +127,7 @@ Wenn aehnlich existiert: bestehende ergaenzen oder auf `validity: superseded` se
 
 ## Vault Index (TSV, Machine-Index)
 
-**Pfad:** `00_Meta/vault-index.md`. Maschinen-gepflegt. **Grep, nicht Load** — nie komplett in den Kontext laden.
+**Pfad:** `00_Meta/system/vault-index.md`. Maschinen-gepflegt. **Grep, nicht Load** — nie komplett in den Kontext laden.
 
 **Spalten:** `path title type tags aliases topics updated` (Tab-getrennt).
 
@@ -143,11 +143,11 @@ Wenn aehnlich existiert: bestehende ergaenzen oder auf `validity: superseded` se
 
 ## Vault Log (Timeline)
 
-`00_Meta/vault-log.md` — append-only Chronik (`## [YYYY-MM-DD] <op> | <summary>`, eine Zeile pro Operation). Geschrieben von `/context-sweep`, `/vault-reindex`, `/vault-lint`, `/compress`. Gelesen von `/resume` fuer Cross-Session-Kontinuitaet.
+`00_Meta/system/vault-log.md` — append-only Chronik (`## [YYYY-MM-DD] <op> | <summary>`, eine Zeile pro Operation). Geschrieben von `/context-sweep`, `/vault-reindex`, `/vault-lint`, `/compress`. Gelesen von `/resume` fuer Cross-Session-Kontinuitaet.
 
 ## Lint (Health-Check)
 
-Separater Command `/vault-lint`, woechentlich oder on-demand. Report-only, keine Auto-Fixes. Output: `00_Meta/lint-reports/YYYY-MM-DD-lint.md`. Checks + Details im Skill-Body.
+Separater Command `/vault-lint`, woechentlich oder on-demand. Report-only, keine Auto-Fixes. Output: `00_Meta/system/lint-reports/YYYY-MM-DD-lint.md`. Checks + Details im Skill-Body.
 
 ## Learnings automatisch nutzen
 

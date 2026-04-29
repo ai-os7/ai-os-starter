@@ -141,9 +141,9 @@ for f in ~/.claude/*.bak.<TIMESTAMP>; do mv "$f" "${f%.bak.*}"; done
 **Schritt 2: Vault-Changes rückgängig machen** (falls neue Vault-Files nicht gewollt):
 ```bash
 # Templates die Bootstrap angelegt hat (wenn du vorher keine hattest)
-rm ~/Documents/Second-Brain/00_Meta/vault-index.md 2>/dev/null
-rm ~/Documents/Second-Brain/00_Meta/vault-log.md 2>/dev/null
-rm ~/Documents/Second-Brain/00_Meta/vault-clusters.md.template 2>/dev/null
+rm ~/Documents/Second-Brain/00_Meta/system/vault-index.md 2>/dev/null
+rm ~/Documents/Second-Brain/00_Meta/system/vault-log.md 2>/dev/null
+rm ~/Documents/Second-Brain/00_Meta/clusters/vault-clusters.md.template 2>/dev/null
 # Templates einzeln entfernen falls nötig
 ```
 
