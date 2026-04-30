@@ -1,4 +1,12 @@
-# /new-project — Neues Projekt, Area oder Thema schlank aufsetzen
+---
+name: new-project
+description: Setzt ein neues Projekt, eine Area oder ein laufendes Thema schlank auf — CLAUDE.md, .planning/STATE.md, Vault-Notiz und project-repos.yaml-Eintrag in einem Rutsch. Triggert wenn jemand sagt "neues Projekt aufsetzen", "neue Area", "neues Thema starten", "ich starte was Neues", "leg ein Projekt an", "/new-project".
+when_to_use: |
+  Trigger-Phrasen: "neues Projekt aufsetzen", "neue Area", "neues Thema starten", "leg ein Projekt an", "ich starte was Neues", "Projekt-Skeleton bauen", "/new-project". Annahme: User ist im richtigen Projekt-Ordner (CWD = Projekt-Stamm). Wenn User Phasen/Requirements/Roadmap braucht, am Ende auf /gsd:new-project verweisen.
+allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Bash(mkdir:*), Bash(grep:*), Bash(ls:*), Bash(date:*), Bash(pwd:*)
+---
+
+# Neues Projekt schlank aufsetzen
 
 Minimum Viable Setup: **CLAUDE.md (Root), `.planning/STATE.md`, Vault-Notiz, project-repos.yaml-Eintrag**. Kein PROJECT.md, kein Roadmap, kein config.json. Funktioniert fuer Projekte mit Enddatum, Areas ohne Enddatum, Client-Arbeit und laufende Themen.
 
@@ -147,7 +155,7 @@ Nur Felder fragen, die noch nicht aus Phase 0.5 extrahiert sind.
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- PROJEKT AUFGESETZT ✓
+ PROJEKT AUFGESETZT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 {{PROJEKTNAME}}

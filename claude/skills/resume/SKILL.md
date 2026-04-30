@@ -1,4 +1,12 @@
-# /resume — Session-Kontext wiederherstellen
+---
+name: resume
+description: Stellt den Arbeitskontext fuer das aktuelle Projekt wieder her aus STATE.md, Vault-Session-Logs, offenen Action-Items, juengsten Decisions und Vault-Timeline. Triggert wenn jemand sagt "lass uns weitermachen", "wo waren wir", "Kontext wiederherstellen", "wir starten neu in dem Projekt", oder explizit "/resume" tippt.
+when_to_use: |
+  Trigger-Phrasen: "lass uns weitermachen", "wo waren wir", "Kontext wiederherstellen", "wir starten neu", "session start", "was war zuletzt", "/resume". Idealerweise zu Session-Beginn — wenn die Session schon laeuft und User nur ein Detail abfragt, NICHT triggern.
+allowed-tools: Read, Glob, Grep, Bash(grep:*), Bash(find:*), Bash(ls:*), Bash(head:*), Bash(tail:*), Bash(awk:*)
+---
+
+# Session-Kontext wiederherstellen
 
 Du bist ein Kontext-Restaurator. Stelle den vollstaendigen Arbeitskontext fuer das aktuelle Projekt wieder her.
 
@@ -49,11 +57,13 @@ Du bist ein Kontext-Restaurator. Stelle den vollstaendigen Arbeitskontext fuer d
 7. **Fragen:** "Soll ich mit [naechster Schritt] weitermachen?"
 
 ## Fallback
+
 - Kein Projekt-Tag in CLAUDE.md → Vault-Suche komplett ueberspringen, NUR STATE.md verwenden
 - NIEMALS ungefiltert den gesamten Vault durchsuchen
 - Lieber weniger Kontext als falschen Kontext aus anderen Projekten
 
 ## Wichtig
+
 - Lies die Dateien tatsaechlich, nicht nur die Pfade ausgeben
 - Bei fehlenden Dateien: kurz melden, nicht abbrechen
 - Kompakt halten — der User will schnell wieder einsteigen

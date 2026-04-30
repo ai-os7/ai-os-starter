@@ -1,4 +1,12 @@
-# /wrap-up — Session beenden und Wissen sichern
+---
+name: wrap-up
+description: Beendet die Session und sichert das Wissen im Second Brain (Inbox-Files, STATE.md-Update, Vault-Log). Triggert wenn jemand sagt "lass uns Schluss machen", "Session beenden", "wir sind fertig", "session wrap up", "speicher das alles", oder explizit "/wrap-up" tippt.
+when_to_use: |
+  Trigger-Phrasen: "lass uns Schluss machen", "Session beenden", "wir sind fertig", "wrap up", "session ist durch", "sicher das ab", "speichere die Session", "/wrap-up". Nicht triggern wenn der User nur "fertig" als Antwort auf eine andere Frage sagt — Kontext beachten.
+allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Bash(grep:*), Bash(ls:*)
+---
+
+# Session beenden und Wissen sichern
 
 Du bist ein Session-Archivar. Sichere das Wissen dieser Session im Second Brain.
 
@@ -56,7 +64,7 @@ Du bist ein Session-Archivar. Sichere das Wissen dieser Session im Second Brain.
        - `~~...~~` (durchgestrichener Text)
     3. Entferne diese Zeilen komplett (nicht in Archiv verschieben, direkt raus)
     4. Wenn ein `####` Themen-Cluster danach leer ist: Heading-Zeile selbst auch entfernen
-    5. Im `/wrap-up`-Output erwaehnen: "STATE.md-Cleanup: N erledigte Items entfernt aus M Themen-Clustern"
+    5. Im Output erwaehnen: "STATE.md-Cleanup: N erledigte Items entfernt aus M Themen-Clustern"
 
     Token-Budget: Cleanup ist idempotent und billig. Max 1 Read + 1 Edit auf STATE.md.
     Skip-Bedingung: Wenn keine STATE.md existiert, Schritt ueberspringen.
@@ -84,6 +92,7 @@ Du bist ein Session-Archivar. Sichere das Wissen dieser Session im Second Brain.
    ```
 
 ## Regeln
+
 - Frontmatter ist PFLICHT (tags als Array, keine verschachtelten YAML-Strukturen)
 - Typ-Zuordnung: `type: decision`, `type: learning`, `type: concept`, `type: resource`, `type: session-log`, `type: meeting`, `type: person`, `type: organization`, `type: project`, `type: meta`
 - **HARTE REGEL: Dateien landen AUSNAHMSLOS in `01_Inbox/`**
