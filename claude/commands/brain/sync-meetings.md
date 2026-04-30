@@ -6,7 +6,6 @@ allowed-tools:
   - Edit
   - Bash(ls:*)
   - Bash(mkdir:*)
-  - Bash(cat:*)
   - Bash(date:*)
   - Bash(grep:*)
   - Bash(find:*)
@@ -16,6 +15,15 @@ argument-hint: "[created_after ISO-Timestamp, z.B. 2026-04-01T00:00:00Z — opti
 ---
 
 Du synchronisierst Fathom-Meetings in den Obsidian-Vault unter `/Users/affombirhane/Documents/Second-Brain/`. Arbeite autonom, frage nur bei harten Fehlern.
+
+## Invarianten (gelten fuer jeden Execution-Mode, jede Situation)
+
+- **Jedes neue Vault-Artefakt landet in `01_Inbox/`.** Kein Write-Pfad ausserhalb
+  `~/Documents/Second-Brain/01_Inbox/` und `~/Documents/Second-Brain/00_Meta/system/` ist erlaubt.
+  Projekt-Erkennung (Schritt 3, 5b) steuert NUR tags und frontmatter, **niemals den Pfad**.
+- STATE.md-Writes nur on-demand. Scheduled = kein Write ausserhalb `Second-Brain/01_Inbox/`.
+- Vor jedem Write pruefen: Pfad enthaelt `01_Inbox/`? Wenn nicht → Ausfuehrung stoppen,
+  Fehler-Log nach `01_Inbox/YYYY-MM-DD-sync-error.md`.
 
 ## Execution-Mode
 
@@ -81,7 +89,12 @@ Keine Kandidaten → weiter zu 5a.
 
 ### 5a-e Meeting-File schreiben (bei keinem Duplikat)
 
-Pfad: `01_Inbox/YYYY-MM-DD-meeting-<slug>.md` (ausnahmslos Inbox). Slug: lowercase, `[a-z0-9-]`, Umlaute zu ae/oe/ue/ss.
+**WRITE-PATH-REGEL (unveraenderlich, keine Ausnahmen):**
+Pfad: `~/Documents/Second-Brain/01_Inbox/YYYY-MM-DD-meeting-<slug>.md`
+Slug: lowercase, `[a-z0-9-]`, Umlaute zu ae/oe/ue/ss.
+Das Projekt-Matching (Schritt 3) steuert NUR `project/<slug>`-Tag im Frontmatter, nicht den Pfad.
+Kontrolle vor jedem Write: Pfad enthaelt `01_Inbox/`? Wenn nicht → kein Write, stattdessen
+`01_Inbox/YYYY-MM-DD-sync-error.md` mit Beschreibung des abgewiesenen Pfads.
 
 **Frontmatter (exakte Reihenfolge):**
 ```yaml
