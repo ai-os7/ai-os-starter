@@ -185,10 +185,13 @@ ai-os-starter/
 │   ├── CLAUDE.md             # Globale Claude Code Instructions
 │   ├── settings.json.template # Stripped Settings (Template)
 │   ├── rules/                # 4 Rule-Files
-│   ├── commands/             # Slash-Commands (brain/, gsd/ — Legacy-Format)
-│   ├── skills/               # Skills (April-2026-Standard, auto-invokable)
+│   ├── commands/brain/       # 4 Slash-Commands (Vault-Tooling, Doppelpunkt-Namespace /brain:*)
+│   ├── skills/               # 4 Skills (skill-creator, wrap-up, resume, new-project) — April-2026-Standard, auto-invokable
 │   ├── hooks/                # 7 Hook-Scripts
-│   └── participants/         # Per-TN Bundles — NICHT auto-installiert
+│   └── participants/         # Per-TN Bundles — NICHT auto-installiert (manuelles cp beim Pre-Call)
+│
+│  GSD-Commands (/gsd:*) werden separat im Bootstrap via
+│  npx -y get-shit-done-cc --global installiert — nicht im Repo.
 ├── vault-skeleton/           # Mappt zu ~/Documents/Second-Brain/
 │   ├── 00_Meta/
 │   │   ├── Templates/        # 8 Obsidian-Templates
