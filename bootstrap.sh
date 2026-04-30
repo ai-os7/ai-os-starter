@@ -171,6 +171,46 @@ copy_with_backup() {
 }
 
 # =============================================================================
+# Helper: copy a Skill directory with timestamped backup
+# Skills are directories: <skill>/SKILL.md plus optional references/, examples/, scripts/
+# =============================================================================
+copy_skill_with_backup() {
+  local src_dir="$1"   # source skill directory in repo
+  local dst_dir="$2"   # target skill directory in ~/.claude/skills/
+
+  if [ "$DRY_RUN" -eq 1 ]; then
+    if [ -d "$dst_dir" ]; then
+      if diff -rq "$src_dir" "$dst_dir" &>/dev/null; then
+        drylog "WUERDE UEBERSPRINGEN (identisch): skill $(basename "$src_dir")"
+      else
+        drylog "WUERDE BACKUP + KOPIEREN: $dst_dir -> $dst_dir.bak.$TS"
+      fi
+    else
+      drylog "WUERDE NEU ANLEGEN: skill $(basename "$src_dir")"
+    fi
+    COUNT_DRY=$((COUNT_DRY + 1))
+    return
+  fi
+
+  mkdir -p "$(dirname "$dst_dir")"
+  if [ -d "$dst_dir" ]; then
+    if diff -rq "$src_dir" "$dst_dir" &>/dev/null; then
+      info "Skill unveraendert (uebersprungen): $(basename "$src_dir")"
+      COUNT_UNCHANGED=$((COUNT_UNCHANGED + 1))
+    else
+      mv "$dst_dir" "${dst_dir}.bak.${TS}"
+      cp -R "$src_dir" "$dst_dir"
+      warn "Skill-Backup angelegt: $(basename "$dst_dir").bak.$TS — neu: $(basename "$src_dir")"
+      COUNT_BACKED=$((COUNT_BACKED + 1))
+    fi
+  else
+    cp -R "$src_dir" "$dst_dir"
+    info "Skill neu angelegt: $(basename "$dst_dir")"
+    COUNT_NEW=$((COUNT_NEW + 1))
+  fi
+}
+
+# =============================================================================
 # Helper: copy only if absent (for vault files — NEVER overwrite)
 # =============================================================================
 copy_if_absent() {
@@ -209,6 +249,7 @@ install_claude_files() {
   if [ "$DRY_RUN" -eq 0 ]; then
     mkdir -p "$CLAUDE_DIR/rules"
     mkdir -p "$CLAUDE_DIR/commands"
+    mkdir -p "$CLAUDE_DIR/skills"
     mkdir -p "$CLAUDE_DIR/hooks"
   fi
 
@@ -225,6 +266,13 @@ install_claude_files() {
   for cmd_file in "$REPO_DIR/claude/commands/"*.md; do
     [ -f "$cmd_file" ] || continue
     copy_with_backup "$cmd_file" "$CLAUDE_DIR/commands/$(basename "$cmd_file")"
+  done
+
+  # Skills (directory-based, each skill is <name>/SKILL.md plus optional subdirs)
+  for skill_dir in "$REPO_DIR/claude/skills/"*/; do
+    [ -d "$skill_dir" ] || continue
+    skill_dir="${skill_dir%/}"  # strip trailing slash
+    copy_skill_with_backup "$skill_dir" "$CLAUDE_DIR/skills/$(basename "$skill_dir")"
   done
 
   # Hooks

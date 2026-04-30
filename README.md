@@ -2,7 +2,7 @@
 
 Dieses Repository enthält das AI Operating System Setup für Teilnehmer des **AI Operating System Workshops** von Affom Birhane.
 
-Nach dem Setup hast du ein vollständiges, persönliches AI-OS: Claude Code mit vorbereiteten globalen Instructions, Slash-Commands, Hooks, und einem Obsidian Second Brain.
+Nach dem Setup hast du ein vollständiges, persönliches AI-OS: Claude Code mit vorbereiteten globalen Instructions, Skills (auto-invokable Workflows), Slash-Commands, Hooks, und einem Obsidian Second Brain.
 
 ---
 
@@ -185,7 +185,8 @@ ai-os-starter/
 │   ├── CLAUDE.md             # Globale Claude Code Instructions
 │   ├── settings.json.template # Stripped Settings (Template)
 │   ├── rules/                # 4 Rule-Files
-│   ├── commands/             # 7 Slash-Commands
+│   ├── commands/             # Slash-Commands (Legacy-Format, funktionieren weiter)
+│   ├── skills/               # Skills (April-2026-Standard, auto-invokable)
 │   └── hooks/                # 7 Hook-Scripts
 ├── vault-skeleton/           # Mappt zu ~/Documents/Second-Brain/
 │   ├── 00_Meta/
