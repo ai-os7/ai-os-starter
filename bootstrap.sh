@@ -262,11 +262,11 @@ install_claude_files() {
     copy_with_backup "$rule_file" "$CLAUDE_DIR/rules/$(basename "$rule_file")"
   done
 
-  # Commands
-  for cmd_file in "$REPO_DIR/claude/commands/"*.md; do
-    [ -f "$cmd_file" ] || continue
-    copy_with_backup "$cmd_file" "$CLAUDE_DIR/commands/$(basename "$cmd_file")"
-  done
+  # Commands (top-level + namespaced subdirs wie brain/, gsd/, etc.)
+  while IFS= read -r -d '' cmd_file; do
+    rel_path="${cmd_file#$REPO_DIR/claude/commands/}"
+    copy_with_backup "$cmd_file" "$CLAUDE_DIR/commands/$rel_path"
+  done < <(find "$REPO_DIR/claude/commands" -type f -name "*.md" -print0)
 
   # Skills (directory-based, each skill is <name>/SKILL.md plus optional subdirs)
   for skill_dir in "$REPO_DIR/claude/skills/"*/; do
