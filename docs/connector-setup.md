@@ -107,7 +107,7 @@ Suche meine letzten 3 ungelesenen E-Mails
 Was sind meine nächsten 5 Termine?
 ```
 
-### Schnell-Test Fathom (für /sync-meetings)
+### Schnell-Test Fathom (für /brain:sync-meetings)
 
 ```
 Liste meine letzten 5 aufgezeichneten Meetings auf
@@ -119,7 +119,7 @@ Liste meine letzten 5 aufgezeichneten Meetings auf
 
 Sobald alle Connectors aktiv sind, funktionieren die Workshop-Slash-Commands:
 
-- `/sync-meetings` — Fathom-Transkripte in Obsidian Vault übertragen
+- `/brain:sync-meetings` — Fathom-Transkripte in Obsidian Vault übertragen
 - `/resume` — Session mit Vault-Context starten (nutzt Vault-Daten, nicht direkt Connectors)
 
 Detaillierte Anleitungen zu den Slash-Commands kommen im Workshop.

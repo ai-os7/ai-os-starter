@@ -294,10 +294,12 @@ install_vault_skeleton() {
     mkdir -p "$VAULT_DIR/01_Inbox"
     mkdir -p "$VAULT_DIR/02_Projects"
     mkdir -p "$VAULT_DIR/03_Areas"
-    mkdir -p "$VAULT_DIR/05_People"
-    mkdir -p "$VAULT_DIR/06_Resources"
+    mkdir -p "$VAULT_DIR/04_Resources"
+    mkdir -p "$VAULT_DIR/05_Contacts/People"
+    mkdir -p "$VAULT_DIR/05_Contacts/Organizations"
+    mkdir -p "$VAULT_DIR/06_Archive"
   else
-    drylog "WUERDE mkdir -p: $VAULT_DIR/{00_Meta/{Templates,clusters,system/{lint-reports,backups}},01_Inbox,02_Projects,03_Areas,05_People,06_Resources}"
+    drylog "WUERDE mkdir -p: $VAULT_DIR/{00_Meta/{Templates,clusters,system/{lint-reports,backups}},01_Inbox,02_Projects,03_Areas,04_Resources,05_Contacts/{People,Organizations},06_Archive}"
   fi
 
   # Templates (copy_if_absent — niemals ueberschreiben)
@@ -313,6 +315,8 @@ install_vault_skeleton() {
                  "$VAULT_DIR/00_Meta/system/vault-log.md"
   copy_if_absent "$REPO_DIR/vault-skeleton/00_Meta/clusters/vault-clusters.md.template" \
                  "$VAULT_DIR/00_Meta/clusters/vault-clusters.md.template"
+  copy_if_absent "$REPO_DIR/vault-skeleton/00_Meta/vault-structure.md" \
+                 "$VAULT_DIR/00_Meta/vault-structure.md"
 }
 
 # =============================================================================

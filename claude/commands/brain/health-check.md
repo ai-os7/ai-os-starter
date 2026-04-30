@@ -1,10 +1,10 @@
-# /vault-lint — Vault Health-Check mit interaktivem Fix
+# /brain:health-check — Vault Health-Check mit interaktivem Fix
 
-Du fuehrst einen Health-Check des Vaults durch, schreibst einen Report, und bietest dann interaktiv an, die gefundenen Issues zu fixen. UX-Muster analog zu `/compress`: erst zeigen was gefunden wurde, dann pro Kategorie auf Go warten, dann Aenderungen ausfuehren.
+Du fuehrst einen Health-Check des Vaults durch, schreibst einen Report, und bietest dann interaktiv an, die gefundenen Issues zu fixen. UX-Muster analog zu `/wrap-up`: erst zeigen was gefunden wurde, dann pro Kategorie auf Go warten, dann Aenderungen ausfuehren.
 
 ## Voraussetzung
 
-`00_Meta/system/vault-index.md` muss existieren und aktuell sein. Falls Drift-Verdacht: zuerst `/vault-reindex` empfehlen.
+`00_Meta/system/vault-index.md` muss existieren und aktuell sein. Falls Drift-Verdacht: zuerst `/brain:rebuild-index` empfehlen.
 
 ## Checks
 
@@ -43,9 +43,9 @@ Fuehre alle Checks via `grep` und gezielte Sub-Agent-Reads aus, NIE den ganzen V
 ### 6. Index-Drift
 
 - TSV-Eintraege gegen `find` auf Disk abgleichen
-- Index-Eintrag ohne Datei → "Datei wurde ausserhalb /context-sweep geloescht"
-- Datei ohne Index-Eintrag → "Datei wurde ausserhalb /context-sweep angelegt"
-- Bei Drift: `/vault-reindex` empfehlen
+- Index-Eintrag ohne Datei → "Datei wurde ausserhalb /brain:sort-inbox geloescht"
+- Datei ohne Index-Eintrag → "Datei wurde ausserhalb /brain:sort-inbox angelegt"
+- Bei Drift: `/brain:rebuild-index` empfehlen
 
 ### 7. Projekt-Repos-Drift (YAML ↔ Vault)
 
@@ -64,7 +64,7 @@ Schreibe Report nach `~/Documents/Second-Brain/00_Meta/system/lint-reports/YYYY-
 ```markdown
 ---
 title: "Vault Lint Report YYYY-MM-DD"
-type: lint-report
+type: meta
 created_date: YYYY-MM-DD
 ---
 
@@ -117,7 +117,7 @@ Nach dem Report Summary zeigen und dann pro Kategorie mit Issues den User fragen
 ### Fix-Aktionen
 
 **Drift**
-- Hinweis: "Bitte `/context-sweep` laufen lassen, der raeumt Index und Inbox auf."
+- Hinweis: "Bitte `/brain:sort-inbox` laufen lassen, der raeumt Index und Inbox auf."
 - Nicht automatisch ausloesen, weil Sweep eigene Interaktion hat.
 
 **Projekt-Repos-Drift**

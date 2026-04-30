@@ -1,4 +1,4 @@
-# /vault-reindex — Vault-Index komplett neu aufbauen
+# /brain:rebuild-index — Vault-Index komplett neu aufbauen
 
 Du baust den maschinen-gepflegten Vault-Index `00_Meta/system/vault-index.md` from scratch neu auf. Wird genutzt bei Erstinstallation, Drift-Verdacht oder als woechentliche Wartung.
 

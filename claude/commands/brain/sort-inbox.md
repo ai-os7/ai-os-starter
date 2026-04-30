@@ -1,10 +1,10 @@
-# /context-sweep — Inbox aufraeumen und Wissen einsortieren
+# /brain:sort-inbox — Inbox aufraeumen und Wissen einsortieren
 
 Du bist ein Wissens-Kurator. Raeume die Inbox auf und sortiere Inhalte in die richtige Stelle im Vault ein.
 
 ## Voraussetzung
 
-`00_Meta/system/vault-index.md` muss existieren (TSV-Index aller Vault-Dateien). Falls nicht: STOP, dem User `/vault-reindex` empfehlen. Details zum Index in `~/.claude/rules/vault-workflow.md` (Abschnitt "Vault Index").
+`00_Meta/system/vault-index.md` muss existieren (TSV-Index aller Vault-Dateien). Falls nicht: STOP, dem User `/brain:rebuild-index` empfehlen. Details zum Index in `~/.claude/rules/vault-workflow.md` (Abschnitt "Vault Index").
 
 ## Delegation-Protocol
 
@@ -53,7 +53,7 @@ Main buendelt TSV-Patches + Hub-Proposals (1-2 Edits statt N), stellt Open Quest
 - Erwartetes Dateiformat: `YYYY-MM-DD-[beschreibung].md`
 
 ### 1.5. Vault-Index pruefen (NICHT laden!)
-- `00_Meta/system/vault-index.md` muss existieren. Wenn nicht: STOP, `/vault-reindex` empfehlen.
+- `00_Meta/system/vault-index.md` muss existieren. Wenn nicht: STOP, `/brain:rebuild-index` empfehlen.
 - **Lade den Index NIE komplett in den Kontext.** Stattdessen: gezielte `grep`-Queries pro Lookup-Bedarf in den naechsten Schritten.
 - Query-Muster:
   - Alias-Lookup: `grep -i "alias-text" 00_Meta/system/vault-index.md`
@@ -71,9 +71,9 @@ Pro Inbox-Datei:
 
 Bei Unsicherheit IMMER User fragen (Namen, Personen, Decision-Ueberlappung). Keine eigenmaechtigen Merges.
 
-### 2.5. Dedup-Warning-Guard (Meetings aus `/sync-meetings`)
+### 2.5. Dedup-Warning-Guard (Meetings aus `/brain:sync-meetings`)
 
-Meetings, die `/sync-meetings` als **unklar** klassifiziert hat (gleicher Titel, leichte Zeit-/Scope-Differenz), kommen mit `dedup_warning: true` im Frontmatter und einem `> [!warning] Moegliches Duplikat`-Callout im Body in die Inbox. Das ist der Punkt, an dem der User semantisch entscheiden muss.
+Meetings, die `/brain:sync-meetings` als **unklar** klassifiziert hat (gleicher Titel, leichte Zeit-/Scope-Differenz), kommen mit `dedup_warning: true` im Frontmatter und einem `> [!warning] Moegliches Duplikat`-Callout im Body in die Inbox. Das ist der Punkt, an dem der User semantisch entscheiden muss.
 
 **Pro Inbox-Datei mit `dedup_warning: true`:**
 
@@ -96,7 +96,7 @@ Meetings, die `/sync-meetings` als **unklar** klassifiziert hat (gleicher Titel,
 ### 3. Frontmatter pruefen und anreichern
 - Pflichtfelder: title, created_date, type, status, tags, aliases
 - Tags aus Taxonomie korrekt? Keine neuen Top-Level-Tags?
-- Gueltige Typen: `decision`, `learning`, `session-log`, `person`, `concept`, `meeting`, `project`, `organization`
+- Gueltige Typen: `decision`, `learning`, `concept`, `resource`, `session-log`, `meeting`, `person`, `organization`, `project`, `meta`
 - **Verlinkung pruefen:** Personen nur via `[[Wikilinks]]` referenzieren (keine human/-Tags)
 - Status von `draft` auf `done` setzen wenn fertig
 
@@ -107,19 +107,19 @@ Meetings, die `/sync-meetings` als **unklar** klassifiziert hat (gleicher Titel,
 
 ### 5. Semantisches Linking (via TSV)
 - VOR jeder Verlinkung: `grep` im TSV-Index nach verwandten Dateien (Topic-Spalte)
-- Zu passenden MOCs in `04_Permanent/MOCs/` verlinken
+- Zu passenden Hubs (Concepts, Index-Files) in `04_Resources/` verlinken
 - Neue MOCs nur anlegen wenn 5+ Dateien ein Thema teilen
 
 ### 6. Einsortieren
 | Typ | Ziel |
 |-----|------|
 | Decision | `02_Projects/[slug]/` oder `03_Areas/[slug]/` |
-| Learning | `06_Resources/Tools/` (bestehende Datei ergaenzen wenn Topic-Match) |
+| Learning | `04_Resources/` (bestehende Datei ergaenzen wenn Topic-Match) |
 | Meeting Note | `02_Projects/[slug]/` (wenn Projekt aktiv) oder `03_Areas/[slug]/` |
 | Session Log | `02_Projects/[slug]/` |
-| Concept/Evergreen | `04_Permanent/Concepts/` |
-| Person | `05_People/People/` |
-| Organization | `05_People/Organizations/` |
+| Concept/Evergreen | `04_Resources/` |
+| Person | `05_Contacts/People/` |
+| Organization | `05_Contacts/Organizations/` |
 
 Zum Bewegen `mv` nutzen, nicht Read+Write+Delete.
 
@@ -208,7 +208,7 @@ c) **Unresolved Links fixen:**
 d) **Stub-Cleanup:** Inbox auf leere .md Dateien pruefen und loeschen
 
 ### 8. Drift-Check
-Wenn waehrend des Sweeps ein TSV-Eintrag aufgetaucht ist, dessen Datei auf Disk nicht existiert (oder umgekehrt): Drift-Warnung im Bericht ausgeben und `/vault-reindex` empfehlen.
+Wenn waehrend des Sweeps ein TSV-Eintrag aufgetaucht ist, dessen Datei auf Disk nicht existiert (oder umgekehrt): Drift-Warnung im Bericht ausgeben und `/brain:rebuild-index` empfehlen.
 
 ### 8.5. CLAUDE.md-Implikations-Check
 

@@ -46,7 +46,7 @@ AskUserQuestion:
   question: "In diesem Verzeichnis existiert bereits [CLAUDE.md | STATE.md | beides]. Wie weiter?"
   options:
     - label: "Abbrechen"
-      description: "Nichts aendern. User kann /resume oder /compress nutzen."
+      description: "Nichts aendern. User kann /resume oder /wrap-up nutzen."
     - label: "Neu ueberschreiben"
       description: "Bestehende Dateien durch frisches Setup ersetzen. Explizite Confirm-Zeile vorher."
     - label: "Nur fehlende Teile"
@@ -177,7 +177,7 @@ Optional naechster Schritt:
 - **Freeform-Extraktion aus Phase 0.5:** so viele Felder wie moeglich ableiten, nicht erneut fragen. Bei Unsicherheit (z.B. Typ nicht klar ableitbar): lieber nachfragen als falsch setzen.
 - **Ueberschreiben-Option in Phase 0:** erfordert explizite zweite Confirm-Zeile mit Datei-Liste.
 - **Abbruch jederzeit:** User kann "skip", "spaeter" oder "weiter" sagen. Fehlende Felder werden `[TODO]`.
-- **Neue Vault-Notiz** wird beim naechsten `/context-sweep` automatisch in `00_Meta/system/vault-index.md` aufgenommen. Kein manueller Reindex.
+- **Neue Vault-Notiz** wird beim naechsten `/brain:sort-inbox` automatisch in `00_Meta/system/vault-index.md` aufgenommen. Kein manueller Reindex.
 
 ## Templates
 

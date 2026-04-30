@@ -1,4 +1,4 @@
-# /compress — Session beenden und Wissen sichern
+# /wrap-up — Session beenden und Wissen sichern
 
 Du bist ein Session-Archivar. Sichere das Wissen dieser Session im Second Brain.
 
@@ -15,7 +15,7 @@ Du bist ein Session-Archivar. Sichere das Wissen dieser Session im Second Brain.
    - Externe Quellen: API-Responses, Web-Recherchen, Dokumentationen
    Fuer jede Quelle fragen: "Gibt es hier etwas, das ueber diese Session hinaus wertvoll ist?"
    Lieber eine Erkenntnis zu viel in die Inbox als eine wichtige Information verlieren.
-   Die Inbox ist ein Sicherheitsnetz — /context-sweep entscheidet spaeter was bleibt.
+   Die Inbox ist ein Sicherheitsnetz — /brain:sort-inbox entscheidet spaeter was bleibt.
 
 3. **Vorschlaege dem User praesentieren**
    Konkrete Liste mit Typ-Zuordnung:
@@ -56,7 +56,7 @@ Du bist ein Session-Archivar. Sichere das Wissen dieser Session im Second Brain.
        - `~~...~~` (durchgestrichener Text)
     3. Entferne diese Zeilen komplett (nicht in Archiv verschieben, direkt raus)
     4. Wenn ein `####` Themen-Cluster danach leer ist: Heading-Zeile selbst auch entfernen
-    5. Im `/compress`-Output erwaehnen: "STATE.md-Cleanup: N erledigte Items entfernt aus M Themen-Clustern"
+    5. Im `/wrap-up`-Output erwaehnen: "STATE.md-Cleanup: N erledigte Items entfernt aus M Themen-Clustern"
 
     Token-Budget: Cleanup ist idempotent und billig. Max 1 Read + 1 Edit auf STATE.md.
     Skip-Bedingung: Wenn keine STATE.md existiert, Schritt ueberspringen.
@@ -64,7 +64,7 @@ Du bist ein Session-Archivar. Sichere das Wissen dieser Session im Second Brain.
 5.3 **Vault-Log Eintrag**
     Append eine Zeile an `~/Documents/Second-Brain/00_Meta/system/vault-log.md`:
     ```
-    ## [YYYY-MM-DD] compress | <projekt-slug>: N inbox-files written, <one-line-summary>
+    ## [YYYY-MM-DD] wrap-up | <projekt-slug>: N inbox-files written, <one-line-summary>
     ```
     Format: max 120 Zeichen. Beispiel: `## [2026-04-08] compress | ai-mastermind: 4 inbox files, vault-index/log infrastructure built`. Diese Zeile gibt dem naechsten /resume die Cross-Session-Timeline.
 
@@ -72,7 +72,7 @@ Du bist ein Session-Archivar. Sichere das Wissen dieser Session im Second Brain.
     Hat sich die Natur des Projekts veraendert?
     - Projekt ohne Enddatum → Vorschlag: "Soll ich [Projekt] nach 03_Areas/ verschieben?"
     - Area mit neuem konkreten Ziel → Vorschlag: "Soll ich [Area] nach 02_Projects/ verschieben?"
-    - Projekt abgeschlossen → Vorschlag: "Soll ich [Projekt] nach 08_Archive/ verschieben?"
+    - Projekt abgeschlossen → Vorschlag: "Soll ich [Projekt] nach 06_Archive/ verschieben?"
     NUR vorschlagen, NIEMALS eigenstaendig verschieben. User muss explizit bestaetigen.
 
 6. **Bestaetigung ausgeben**
@@ -85,10 +85,10 @@ Du bist ein Session-Archivar. Sichere das Wissen dieser Session im Second Brain.
 
 ## Regeln
 - Frontmatter ist PFLICHT (tags als Array, keine verschachtelten YAML-Strukturen)
-- Typ-Zuordnung: `type: decision`, `type: learning`, `type: session-log`, `type: person`, `type: concept`, `type: meeting`
+- Typ-Zuordnung: `type: decision`, `type: learning`, `type: concept`, `type: resource`, `type: session-log`, `type: meeting`, `type: person`, `type: organization`, `type: project`, `type: meta`
 - **HARTE REGEL: Dateien landen AUSNAHMSLOS in `01_Inbox/`**
-  NIEMALS direkt in Zielordner schreiben (nicht 06_Resources/, nicht 04_Permanent/, etc.)
-  Auch wenn der Zielordner offensichtlich ist — das Einsortieren ist ALLEIN Job von /context-sweep.
+  NIEMALS direkt in Zielordner schreiben (nicht 04_Resources/, nicht 05_Contacts/, etc.)
+  Auch wenn der Zielordner offensichtlich ist — das Einsortieren ist ALLEIN Job von /brain:sort-inbox.
   Keine Abkuerzungen. Keine Ausnahmen. Kein "ich weiss wo es hingehoert".
 - Kurz und praegnant formulieren — kein Copy-Paste der ganzen Konversation
 - Tags im Frontmatter IMMER OHNE `#` (z.B. `project/tax`, NICHT `#project/tax`). Das `#` ist NUR fuer Inline-Markdown.

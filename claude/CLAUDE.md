@@ -35,18 +35,24 @@ Projekte (02_Projects/) haben ein Enddatum. Areas (03_Areas/) sind laufend.
 Bei Statuswechsel (z.B. Firma gegruendet) → proaktiv Verschiebung vorschlagen.
 NUR vorschlagen, NIEMALS eigenstaendig verschieben. Details → vault-workflow.md
 
-### Gueltige Typen
+### Vault Top-Level (7 Ordner)
 
-decision, learning, session-log, person, concept, meeting, project, organization
+`00_Meta` (System), `01_Inbox` (Capture), `02_Projects` (mit Enddatum), `03_Areas` (laufend), `04_Resources` (projekt-uebergreifend, flach), `05_Contacts/{People,Organizations}` (Menschen + Firmen), `06_Archive` (abgeschlossen). Details: `vault-structure.md` im Vault + `vault-workflow.md`.
+
+### Gueltige Typen (10, MECE)
+
+decision, learning, concept, resource, session-log, meeting, person, organization, project, meta
+
+- `decision` zwischen Optionen entschieden | `learning` aus Tun gelernt | `concept` synthetisiertes Pattern | `resource` externes Material (Artikel, Brand-Guides, Manuals) | `session-log` Solo-Outcome | `meeting` synchron mit anderen | `person`/`organization` Kontakte | `project` Index-File in 02_Projects | `meta` System-Files (vault-index, vault-log, lint-reports, Dashboards)
 
 **Templates:** `00_Meta/Templates/`, neue Vault-Dateien IMMER via Template.
 **Decision Validity:** `validity: active|superseded|archived`, nur active in Kontext laden.
-**Vault-Index:** `00_Meta/system/vault-index.md` (TSV, grep-basiert) und `00_Meta/system/vault-log.md` (append-only Timeline) werden von `/context-sweep`, `/vault-reindex`, `/vault-lint` gepflegt. Details in `vault-workflow.md`.
+**Vault-Index:** `00_Meta/system/vault-index.md` (TSV, grep-basiert) und `00_Meta/system/vault-log.md` (append-only Timeline) werden von `/brain:sort-inbox`, `/brain:rebuild-index`, `/brain:health-check` gepflegt. Details in `vault-workflow.md`.
 
 ## Session Ende
 
-Bei "Schluss", "Fertig", "Session beenden" → `/compress` ausfuehren (aktualisiert STATE.md automatisch).
-Nach grosser Aufgabe (ohne /compress): Proaktiv anbieten: "Soll ich STATE.md aktualisieren?"
+Bei "Schluss", "Fertig", "Session beenden" → `/wrap-up` ausfuehren (aktualisiert STATE.md automatisch).
+Nach grosser Aufgabe (ohne /wrap-up): Proaktiv anbieten: "Soll ich STATE.md aktualisieren?"
 
 ## Schreibstil (global)
 
@@ -80,7 +86,7 @@ Bei Erstellung/Aenderung von UI-Elementen, HTML-Dokumenten oder visuellen Delive
 ## Self-Learning
 
 Problem geloest oder neues Pattern entdeckt → Learning im Vault dokumentieren:
-In `01_Inbox/` als neue Learning-Datei anlegen. /context-sweep sortiert spaeter ein.
+In `01_Inbox/` als neue Learning-Datei anlegen. /brain:sort-inbox sortiert spaeter ein.
 Frontmatter mit `type: learning` setzen, damit es automatisch im Learning Index erscheint.
 
 ## Regeln (Details)

@@ -19,7 +19,7 @@ Du synchronisierst Fathom-Meetings in den Obsidian-Vault unter `/Users/affombirh
 
 ## Execution-Mode
 
-- **on-demand** (User tippt `/sync-meetings` interaktiv): Rueckfragen OK, STATE.md-Writes erlaubt.
+- **on-demand** (User tippt `/brain:sync-meetings` interaktiv): Rueckfragen OK, STATE.md-Writes erlaubt.
 - **scheduled** (Desktop-App Scheduled Task, keine User-Praesenz): autonom, keine Rueckfragen, KEINE Writes ausserhalb `01_Inbox/`.
 
 **Erkennungsregel:** `scheduled`-Mode aktiv, wenn (a) das Skill-Argument das Wort `scheduled` enthaelt ODER (b) im Prompt-Kontext ein Marker wie `SCHEDULED_TASK: true`, `Desktop Scheduled Task`, oder `Autonomer Run` vorkommt. Sonst on-demand.
@@ -46,7 +46,7 @@ Du synchronisierst Fathom-Meetings in den Obsidian-Vault unter `/Users/affombirh
 
 ## Schritt 3, Vault-Kontext laden (einmalig)
 
-- Personen: `ls 05_People/People/ 05_People/Organizations/` + aus `00_Meta/system/vault-index.md` Aliases (`awk -F'\t' '$3=="person" || $3=="organization"'`).
+- Personen: `ls 05_Contacts/People/ 05_Contacts/Organizations/` + aus `00_Meta/system/vault-index.md` Aliases (`awk -F'\t' '$3=="person" || $3=="organization"'`).
 - Projekte: aus jedem `02_Projects/<slug>/<slug>.md` Titel + `aliases:` aus Frontmatter.
 
 ## Schritt 4, Delegation + Sortierung

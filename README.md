@@ -98,7 +98,7 @@ claude --version
 - Kopiert `claude/rules/*.md` → `~/.claude/rules/` (mit Backup)
 - Kopiert `claude/commands/*.md` → `~/.claude/commands/` (mit Backup)
 - Kopiert `claude/hooks/*` → `~/.claude/hooks/` + setzt `chmod +x`
-- Erstellt `~/Documents/Second-Brain/` Ordnerstruktur (PARA: 00_Meta, 01_Inbox, 02_Projects, 03_Areas, 05_People, 06_Resources)
+- Erstellt `~/Documents/Second-Brain/` Ordnerstruktur (PARA: 00_Meta, 01_Inbox, 02_Projects, 03_Areas, 04_Resources, 05_Contacts, 06_Archive)
 - Legt Templates und vault-index/log an (nur wenn noch nicht vorhanden)
 
 **Idempotent:** Zweiter Durchlauf nach erfolgreichem ersten → 0 Änderungen (alles bereits vorhanden).
@@ -156,14 +156,15 @@ ai-os-starter/
 ├── vault-skeleton/           # Mappt zu ~/Documents/Second-Brain/
 │   ├── 00_Meta/
 │   │   ├── Templates/        # 8 Obsidian-Templates
-│   │   ├── vault-index.md    # Leer (Header only, /context-sweep befüllt)
+│   │   ├── vault-index.md    # Leer (Header only, /brain:sort-inbox befüllt)
 │   │   ├── vault-log.md      # Append-only Chronik
 │   │   └── vault-clusters.md.template
 │   ├── 01_Inbox/
 │   ├── 02_Projects/
 │   ├── 03_Areas/
-│   ├── 05_People/
-│   └── 06_Resources/
+│   ├── 04_Resources/         # Flach
+│   ├── 05_Contacts/{People,Organizations}/
+│   └── 06_Archive/
 └── docs/
     ├── connector-setup.md    # MCP-Connector-Setup (Gmail/Calendar/Fathom)
     ├── smoke-test.md         # Verifikations-Prozedur

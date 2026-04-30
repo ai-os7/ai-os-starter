@@ -27,14 +27,14 @@ Bei jeder User-Aufgabe mit Learnings/Decisions-Bezug:
 ### Capture-Verhalten bei cluster-Tag
 
 - **Eindeutige Zuordnung** (klares Thema, passender Slug aus `00_Meta/clusters/vault-clusters.md`, Ziel-Projekt clustered oder `scope/cross-project`) → `cluster/<slug>` direkt im Frontmatter.
-- **Unklar** → leer lassen, `/context-sweep` ergaenzt beim Einsortieren.
+- **Unklar** → leer lassen, `/brain:sort-inbox` ergaenzt beim Einsortieren.
 - **Ziel-Projekt flat** (< 30 Eintraege) → kein cluster-Tag.
 
 Idempotent: gesetzte cluster-Tags werden nicht ueberschrieben.
 
 ### Lifecycle-Trigger
 
-Cluster entstehen ausschliesslich durch `/context-sweep`-Vorschlag mit User-Bestaetigung:
+Cluster entstehen ausschliesslich durch `/brain:sort-inbox`-Vorschlag mit User-Bestaetigung:
 - Projekt-Count >= 30 Decisions+Learnings → Vorschlag. 25-29 → Pre-Warning. Clustered-Projekt < 15 → Collapse.
 - Max 12 Cluster/Projekt (weich), vault-weit ~50. Merge-Check > 60% Topic-Overlap vor neuem Cluster.
 
@@ -45,7 +45,7 @@ Agent darf niemals eigenstaendig Cluster anlegen.
 - YAML-Tags IMMER OHNE `#` (z.B. `- project/tax`). `#` nur inline-Markdown.
 - Pflicht: `type/[typ]`, `project/[slug]` wenn Projekt-Kontext.
 - Projektuebergreifend: `scope/cross-project`.
-- Taxonomie: `type/` → meeting, decision, concept, session-log, project, person, organization, resource, learning | `status/` → draft, in-progress, done, archived | `area/` → engineering, business, recruiting, health
+- Taxonomie: `type/` → meeting, decision, concept, session-log, project, person, organization, resource, learning, meta | `status/` → draft, in-progress, done, archived | `area/` → engineering, business, recruiting, health
 
 ## Frontmatter + Dateinamen
 
@@ -70,7 +70,7 @@ Pflichtfelder: `title`, `created_date` (ISO 8601), `type`, `status`, `tags` (Arr
 - Vault-Dateien landen AUSNAHMSLOS in `01_Inbox/`.
 - Signalwoerter ("merken", "festhalten", "notieren") → sofort in `01_Inbox/`.
 - Ohne Signalwort kurz fragen: "Soll ich das im Second Brain festhalten?"
-- NIEMALS direkt in Zielordner. Einsortieren macht ALLEIN `/context-sweep`.
+- NIEMALS direkt in Zielordner. Einsortieren macht ALLEIN `/brain:sort-inbox`.
 - **Einzige Ausnahme:** User gibt EXPLIZIT einen anderen Zielort an.
 
 ## Capture-Trigger (wann welche Datei?)
@@ -99,6 +99,16 @@ NICHT: Meeting, oder wenn nur eine einzelne Decision entstand.
 
 TRIGGER: Kontext wird unabhaengig vom aktuellen Ticket wieder relevant (Geschaeftsmodell, Persona, Projekt-Rahmen). Person/Organization nur bei wiederkehrender Beziehung, nicht einmalige Erwaehnung.
 
+### Resource
+
+TRIGGER: Externes Material das du behalten willst (Artikel, Brand Guides, Manuals, Web-Clippings, gefundene Frameworks, Buchnotizen). Du hast es konsumiert/gespeichert, nicht synthetisiert.
+NICHT: eigene Patterns die du selbst formuliert hast (`concept`), eigene Lektionen aus dem Tun (`learning`), Diskussions-Decisions (`decision`).
+ABGRENZUNG: `concept` = du hast synthetisiert/benannt | `resource` = jemand anderes hat erstellt, du speicherst | `learning` = aus eigenem Tun
+
+### Meta
+
+TRIGGER: System-Files die der Vault selbst pflegt (vault-index, vault-log, lint-reports, Dashboards). NICHT manuell anlegen, nur durch `/brain:*`-Skills geschrieben.
+
 ## NIEMALS in den Vault
 
 - Code-Snippets, die identisch in der Codebase stehen (Vault ist kein Code-Archiv).
@@ -117,13 +127,17 @@ grep -i "<topic-keyword>" ~/Documents/Second-Brain/00_Meta/system/vault-index.md
 ```
 Wenn aehnlich existiert: bestehende ergaenzen oder auf `validity: superseded` setzen, nicht duplizieren.
 
-## Ordner-Struktur
+## Ordner-Struktur (7 Top-Level, konsekutiv 00–06)
 
-- `02_Projects/[slug]/` und `03_Areas/[slug]/`: Index-Datei `[slug].md` + Wissens-Artefakte `YYYY-MM-DD-*.md`. Gleiche Struktur fuer beide.
-- `05_People/`: Personen + Organisationen (flach).
-- `06_Resources/`: Flach, Unterordner erst ab ~30 Dateien.
+- `00_Meta/` — System (Templates, system/, clusters/). Meist Claude-gepflegt.
+- `01_Inbox/` — Capture-Eingang. Alles Neue landet hier.
+- `02_Projects/[slug]/` — Projekte mit Enddatum. Index-Datei `[slug].md` + Wissens-Artefakte `YYYY-MM-DD-*.md`.
+- `03_Areas/[slug]/` — laufende Verantwortungen. Gleiche Struktur wie Projects.
+- `04_Resources/` — projekt-uebergreifendes Wissen. **Flach**, kein Subordner. Concepts, Resources, Learnings, Decisions die nicht zu einem Projekt gehoeren.
+- `05_Contacts/{People,Organizations}/` — Personen + Firmen, getrennt.
+- `06_Archive/` — abgeschlossene oder nicht mehr aktive Inhalte.
 - Keine leeren Platzhalter-Ordner.
-- Struktur wird von `/context-sweep` beim Einsortieren angewendet, NICHT beim Capture (alles initial → `01_Inbox/`).
+- Struktur wird von `/brain:sort-inbox` beim Einsortieren angewendet, NICHT beim Capture (alles initial → `01_Inbox/`).
 
 ## Vault Index (TSV, Machine-Index)
 
@@ -133,7 +147,7 @@ Wenn aehnlich existiert: bestehende ergaenzen oder auf `validity: superseded` se
 
 **Wann nutzen:** Wikilink-Alias-Check, Personen-Lookup, Duplikat-Check via topics-Spalte, Cross-Projekt-Query.
 
-**Pflege:** `/context-sweep` patcht inkrementell, `/vault-reindex` macht Full-Rebuild. **NIEMALS manuell editieren.** Query-Beispiele + Drift-Detection im jeweiligen Skill-Body.
+**Pflege:** `/brain:sort-inbox` patcht inkrementell, `/brain:rebuild-index` macht Full-Rebuild. **NIEMALS manuell editieren.** Query-Beispiele + Drift-Detection im jeweiligen Skill-Body.
 
 ## Tool-Wahl: Read vs. Bash im Vault
 
@@ -143,11 +157,11 @@ Wenn aehnlich existiert: bestehende ergaenzen oder auf `validity: superseded` se
 
 ## Vault Log (Timeline)
 
-`00_Meta/system/vault-log.md` — append-only Chronik (`## [YYYY-MM-DD] <op> | <summary>`, eine Zeile pro Operation). Geschrieben von `/context-sweep`, `/vault-reindex`, `/vault-lint`, `/compress`. Gelesen von `/resume` fuer Cross-Session-Kontinuitaet.
+`00_Meta/system/vault-log.md` — append-only Chronik (`## [YYYY-MM-DD] <op> | <summary>`, eine Zeile pro Operation). Geschrieben von `/brain:sort-inbox`, `/brain:rebuild-index`, `/brain:health-check`, `/wrap-up`. Gelesen von `/resume` fuer Cross-Session-Kontinuitaet.
 
 ## Lint (Health-Check)
 
-Separater Command `/vault-lint`, woechentlich oder on-demand. Report-only, keine Auto-Fixes. Output: `00_Meta/system/lint-reports/YYYY-MM-DD-lint.md`. Checks + Details im Skill-Body.
+Separater Command `/brain:health-check`, woechentlich oder on-demand. Report-only, keine Auto-Fixes. Output: `00_Meta/system/lint-reports/YYYY-MM-DD-lint.md`. Checks + Details im Skill-Body.
 
 ## Learnings automatisch nutzen
 
