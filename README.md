@@ -6,85 +6,118 @@ Nach dem Setup hast du ein vollständiges, persönliches AI-OS: Claude Code mit 
 
 ---
 
-## Voraussetzungen
+## Voraussetzungen (werden vom Preflight-Check automatisch geprüft)
 
-Bevor du anfängst, stelle sicher:
+Du brauchst:
 
-1. **macOS 13 (Ventura) oder neuer** — `sw_vers -productVersion`
-2. **git installiert** — kommt mit Xcode Command Line Tools (`xcode-select --install`)
-3. **Claude Code installiert** — wird im Pre-Call mit Affom eingerichtet:
-   ```
-   curl -fsSL https://claude.ai/install.sh | bash
-   ```
-4. **Obsidian installiert** — Download: [obsidian.md](https://obsidian.md) (kostenlos)
+- **macOS 13 (Ventura) oder neuer** — 14+ empfohlen
+- **zsh als aktive Shell** (macOS-Default seit Catalina)
+- **git** (Xcode Command Line Tools)
+- **Claude Code** — Anthropic Installer
+- **Homebrew** + **Node.js** — für GSD-Framework
+- **Obsidian** — Second Brain (kostenlos, [obsidian.md](https://obsidian.md))
 
-> **HINWEIS:** Claude Code und Obsidian werden NICHT von `bootstrap.sh` installiert. Das passiert im Pre-Call mit Affom. `bootstrap.sh` installiert nur die Config-Files.
+> **Du musst das nicht selber durchgehen.** `bash preflight.sh` checkt alles und gibt dir die exakten Install-Commands für alles was fehlt — in der richtigen Reihenfolge.
 
 ---
 
-## 6-Schritte-Onboarding
+## Onboarding
+
+### Schritt 0: Terminal.app öffnen + zsh sicherstellen
+
+Öffne **Terminal.app** (nicht Cursor-Terminal — das kommt später). Spotlight (`Cmd+Space`) → "Terminal".
+
+Falls dein Prompt mit `(base)` startet oder du irgendwo `bash-3.2$` siehst, bist du auf bash. Auf zsh wechseln:
+
+```bash
+chsh -s /bin/zsh
+```
+
+**Terminal komplett zumachen + neu öffnen** (nicht nur Tab — komplett). Das ist wichtig, damit alle PATH-Anpassungen später in der richtigen Shell-Config landen.
 
 ### Schritt 1: Repository klonen
 
 ```bash
-git clone https://github.com/ai-os7/ai-os-starter.git ~/Desktop/projects/ai-os-starter
-cd ~/Desktop/projects/ai-os-starter
+git clone https://github.com/ai-os7/ai-os-starter.git ~/ai-os-starter
+cd ~/ai-os-starter
 ```
 
-> **WICHTIG:** Immer via `git clone` klonen, niemals ZIP-Download. Sonst kann macOS Gatekeeper das Skript blockieren (Quarantine-Attribut). Falls du trotzdem ein ZIP heruntergeladen hast: `xattr -dr com.apple.quarantine ./ai-os-starter`
+> **WICHTIG:** Immer via `git clone` klonen, niemals ZIP-Download. macOS Gatekeeper kann ZIPs sonst blockieren (Quarantine-Attribut). Falls doch ZIP: `xattr -dr com.apple.quarantine ./ai-os-starter`
 
-### Schritt 2: Dry-Run zuerst (empfohlen)
+### Schritt 2: Preflight-Check — was fehlt noch?
 
-Bevor du bootstrap.sh ausführst, sieh dir an, was es tun würde — ohne dass etwas auf deiner Festplatte verändert wird:
+```bash
+bash preflight.sh
+```
+
+Read-only Check. Ändert nichts. Output zeigt grüne Häkchen für alles was schon da ist und rote Kreuze + exakte Install-Commands für alles was fehlt.
+
+**Typischer Workflow:** Falls etwas fehlt, die ausgegebenen Install-Commands von oben nach unten ausführen (z.B. erst Homebrew, dann Node, dann Claude Code). Nach jedem Install nochmal `bash preflight.sh` — bis alle Checks grün sind.
+
+**Häufige Reibungspunkte:**
+
+- **Claude-Code-PATH:** Der Anthropic-Installer schreibt PATH-Hinweise nach `~/.bashrc`, auch wenn du zsh nutzt. Preflight gibt dir den korrekten Fix für deine Shell aus.
+- **Homebrew auf Apple Silicon vs Intel:** Unterschiedliche `brew shellenv`-Pfade. Preflight kennt beide Varianten.
+- **macOS 13:** Homebrew warnt, läuft aber. Update auf 14+ wenn möglich.
+
+### Schritt 3: Dry-Run (Bootstrap-Vorschau)
 
 ```bash
 bash bootstrap.sh --dry-run
 ```
 
-Erwarteter Output: Header `[DRY-RUN MODE — keine Aenderungen werden gemacht]`, gefolgt von einer Liste aller geplanten Aktionen. Exit 0 (kein Fehler). Nützlich für den Pre-Call-Walkthrough.
+Zeigt was passieren würde, ohne etwas zu schreiben. Output mit `[DRY-RUN MODE]`-Header.
 
-### Schritt 3: Bootstrap ausführen
+### Schritt 4: Bootstrap ausführen
 
 ```bash
 bash bootstrap.sh
 ```
 
 Das Skript:
-- Prüft Voraussetzungen (macOS-Version, git)
-- Gibt eine freundliche Warnung aus wenn Claude Code fehlt (kein Abbruch)
+- Prüft Voraussetzungen
 - Installiert `~/.claude/` Config-Files (CLAUDE.md, rules/, commands/, hooks/)
 - Erstellt `~/Documents/Second-Brain/` PARA-Struktur + Templates
-- Gibt einen Summary mit Counts aus
+- Installiert das GSD-Framework via `npx -y get-shit-done-cc --global` (falls Node verfügbar)
+- Gibt Summary mit Counts aus
 
-Dauer: ca. 10-30 Sekunden.
+Dauer: 30-60 Sekunden (länger wenn GSD über Netzwerk nachgeladen wird).
 
-### Schritt 4: Verifizieren
+### Schritt 5: Verifizieren
 
 ```bash
-# Config-Files prüfen
 ls ~/.claude/CLAUDE.md
 ls ~/.claude/rules/
 ls ~/.claude/commands/
 ls ~/.claude/hooks/
-
-# Vault-Skeleton prüfen
 ls ~/Documents/Second-Brain/00_Meta/Templates/
-
-# Claude Code Version
 claude --version
 ```
 
-### Schritt 5: Obsidian öffnen
+### Schritt 6: Obsidian öffnen
 
 1. Obsidian starten
 2. "Open folder as vault" klicken
 3. `~/Documents/Second-Brain/` auswählen
 4. Vault ist jetzt mit PARA-Struktur und Templates bereit
 
-### Schritt 6: Nächste Schritte
+### Schritt 7: Claude Code starten + testen
+
+```bash
+cd ~
+claude
+```
+
+In der Claude-REPL:
+- `/help` → Slash-Commands sichtbar
+- `/brain:health-check` → Vault-Sanity-Check
+- `/gsd:help` → GSD-Reference (falls Node installiert)
+
+Falls du Cursor nutzen willst: erst jetzt Cursor öffnen — bei aktivem Cursor-Plugin **Cursor neu starten**, damit die frische `~/.claude/`-Config geladen wird.
+
+### Schritt 8: Nächste Schritte
 
 - **MCP-Connectors einrichten:** Gmail, Calendar, Drive, Fathom → [docs/connector-setup.md](docs/connector-setup.md)
-- **Claude Code testen:** Neues Projekt anlegen, `claude` starten, `/resume` ausführen
 - **Workshop-Materialien:** Kommen vom Trainer im Pre-Call
 
 ---
@@ -144,7 +177,8 @@ Siehe [docs/troubleshooting.md](docs/troubleshooting.md) für:
 
 ```
 ai-os-starter/
-├── bootstrap.sh              # Idempotenter Installer (dieses Skript)
+├── preflight.sh              # Read-only Voraussetzungs-Check (Schritt 2)
+├── bootstrap.sh              # Idempotenter Installer (Schritt 4)
 ├── README.md                 # Dieses Dokument
 ├── .gitignore                # Schützt .claude.json, .bak-Files, Logs
 ├── claude/                   # Mappt zu ~/.claude/

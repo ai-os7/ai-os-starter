@@ -356,6 +356,31 @@ report() {
 # =============================================================================
 # Main
 # =============================================================================
+install_gsd() {
+  echo ""
+  echo "Installiere GSD (Get Shit Done) Framework..."
+  echo ""
+
+  if ! command -v npx &>/dev/null; then
+    warn "npx (Node.js) nicht gefunden — GSD wird uebersprungen."
+    warn "Spaeter nachinstallieren: brew install node && npx -y get-shit-done-cc --global"
+    return 0
+  fi
+
+  if [ "$DRY_RUN" -eq 1 ]; then
+    drylog "WUERDE GSD via npx installieren: npx -y get-shit-done-cc --global"
+    COUNT_DRY=$((COUNT_DRY + 1))
+    return 0
+  fi
+
+  if npx -y get-shit-done-cc --global 2>&1; then
+    info "GSD-Framework installiert (Commands: /gsd:* in Claude Code verfuegbar)"
+    COUNT_NEW=$((COUNT_NEW + 1))
+  else
+    warn "GSD-Install ueber npx ist gescheitert — manueller Retry: npx -y get-shit-done-cc --global"
+  fi
+}
+
 main() {
   parse_args "$@"
 
@@ -369,10 +394,14 @@ main() {
   fi
   echo "================================================"
   echo ""
+  echo "Tipp: Falls noch nicht gemacht — fuehre zuerst 'bash preflight.sh' aus,"
+  echo "      um Voraussetzungen zu pruefen (read-only)."
+  echo ""
 
   prereq_check
   install_claude_files
   install_vault_skeleton
+  install_gsd
   report
 }
 
