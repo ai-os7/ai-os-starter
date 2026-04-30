@@ -185,9 +185,10 @@ ai-os-starter/
 │   ├── CLAUDE.md             # Globale Claude Code Instructions
 │   ├── settings.json.template # Stripped Settings (Template)
 │   ├── rules/                # 4 Rule-Files
-│   ├── commands/             # Slash-Commands (Legacy-Format, funktionieren weiter)
+│   ├── commands/             # Slash-Commands (brain/, gsd/ — Legacy-Format)
 │   ├── skills/               # Skills (April-2026-Standard, auto-invokable)
-│   └── hooks/                # 7 Hook-Scripts
+│   ├── hooks/                # 7 Hook-Scripts
+│   └── participants/         # Per-TN Bundles — NICHT auto-installiert
 ├── vault-skeleton/           # Mappt zu ~/Documents/Second-Brain/
 │   ├── 00_Meta/
 │   │   ├── Templates/        # 8 Obsidian-Templates
