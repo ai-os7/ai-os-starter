@@ -130,11 +130,18 @@ Falls du Cursor nutzen willst: erst jetzt Cursor öffnen — bei aktivem Cursor-
 - Kopiert `claude/CLAUDE.md` → `~/.claude/CLAUDE.md` (mit Backup falls vorhanden)
 - Kopiert `claude/rules/*.md` → `~/.claude/rules/` (mit Backup)
 - Kopiert `claude/commands/*.md` → `~/.claude/commands/` (mit Backup)
+- Kopiert `claude/skills/*` → `~/.claude/skills/` (mit Backup, Verzeichnis-basiert)
 - Kopiert `claude/hooks/*` → `~/.claude/hooks/` + setzt `chmod +x`
 - Erstellt `~/Documents/Second-Brain/` Ordnerstruktur (PARA: 00_Meta, 01_Inbox, 02_Projects, 03_Areas, 04_Resources, 05_Contacts, 06_Archive)
 - Legt Templates und vault-index/log an (nur wenn noch nicht vorhanden)
+- Installiert **GSD-Framework** via `npx -y get-shit-done-cc --global` (Slash-Commands `/gsd:*`)
+- Installiert **playwright-cli** via `npm i -g @playwright/cli` + Chromium-Browser + Microsofts gepflegte Playwright-Skills (Browser-Automation, HTML-Verifikation, Screenshots)
 
 **Idempotent:** Zweiter Durchlauf nach erfolgreichem ersten → 0 Änderungen (alles bereits vorhanden).
+
+### Was bringt playwright-cli?
+
+Microsofts purpose-built CLI für Coding-Agents (token-effizient by design). Damit kannst du Claude beauftragen, Browser zu steuern, Screenshots/PDFs zu generieren, HTML-Slide-Decks zu verifizieren oder Webseiten zu analysieren — direkt aus dem Chat heraus. Die mitgelieferten Playwright-Skills landen in `~/.claude/skills/` und werden von Microsoft gepflegt (du musst nichts selbst bauen).
 
 ---
 

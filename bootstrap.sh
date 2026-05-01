@@ -429,6 +429,60 @@ install_gsd() {
   fi
 }
 
+# =============================================================================
+# Install Playwright CLI (Microsoft's coding-agent CLI + bundled Skills)
+# =============================================================================
+install_playwright_cli() {
+  echo ""
+  echo "Installiere playwright-cli (Browser-Automation fuer Coding-Agents)..."
+  echo ""
+
+  if ! command -v npm &>/dev/null; then
+    warn "npm (Node.js) nicht gefunden — playwright-cli wird uebersprungen."
+    warn "Spaeter nachinstallieren: brew install node && npm i -g @playwright/cli@latest"
+    return 0
+  fi
+
+  if [ "$DRY_RUN" -eq 1 ]; then
+    drylog "WUERDE installieren: npm i -g @playwright/cli@latest"
+    drylog "WUERDE installieren: npx playwright install chromium"
+    drylog "WUERDE Microsoft Playwright-Skill nach $CLAUDE_DIR/skills/playwright-cli kopieren"
+    COUNT_DRY=$((COUNT_DRY + 3))
+    return 0
+  fi
+
+  # 1. Install @playwright/cli (brings playwright lib transitively)
+  if npm i -g @playwright/cli@latest 2>&1; then
+    info "@playwright/cli installiert"
+    COUNT_NEW=$((COUNT_NEW + 1))
+  else
+    warn "@playwright/cli-Install gescheitert — manueller Retry: npm i -g @playwright/cli@latest"
+    return 0
+  fi
+
+  # 2. Install Chromium browser binary (~150 MB)
+  if npx playwright install chromium 2>&1; then
+    info "Chromium-Browser installiert"
+    COUNT_NEW=$((COUNT_NEW + 1))
+  else
+    warn "Chromium-Install gescheitert — manueller Retry: npx playwright install chromium"
+  fi
+
+  # 3. Copy Microsoft's bundled Playwright Skill globally to ~/.claude/skills/
+  # Note: `playwright-cli install --skills` installs project-local (./.claude/skills/).
+  # We want global, so we copy from the npm package source instead.
+  local npm_root pw_source
+  npm_root="$(npm root -g 2>/dev/null || echo '')"
+  pw_source="${npm_root}/@playwright/cli/skills/playwright-cli"
+
+  if [ -d "$pw_source" ]; then
+    copy_skill_with_backup "$pw_source" "$CLAUDE_DIR/skills/playwright-cli"
+  else
+    warn "Microsoft Playwright-Skill-Source nicht gefunden ($pw_source)"
+    warn "Manueller Install: playwright-cli install --skills (im Projekt) oder Skill aus dem npm-Paket kopieren"
+  fi
+}
+
 main() {
   parse_args "$@"
 
@@ -450,6 +504,7 @@ main() {
   install_claude_files
   install_vault_skeleton
   install_gsd
+  install_playwright_cli
   report
 }
 

@@ -183,7 +183,29 @@ fi
 echo ""
 
 # =============================================================================
-# 7. Obsidian (optional — separate GUI-Install)
+# 7. playwright-cli (optional, fuer Browser-Automation + HTML/PDF-Pipeline)
+# =============================================================================
+hdr "playwright-cli (optional, fuer Browser-Automation + HTML/PDF)"
+if command -v playwright-cli &>/dev/null; then
+  pw_ver="$(playwright-cli --version 2>/dev/null | head -1 || echo 'unknown')"
+  ok "playwright-cli $pw_ver"
+  # Check Chromium binary present
+  if [ -d "$HOME/Library/Caches/ms-playwright" ] || [ -d "$HOME/.cache/ms-playwright" ]; then
+    ok "Chromium-Binary gefunden (Browser-Cache)"
+  else
+    warn "Chromium-Binary fehlt — bootstrap.sh installiert es automatisch."
+    hint "Manueller Install: npx playwright install chromium"
+    WARNINGS=$((WARNINGS + 1))
+  fi
+else
+  warn "playwright-cli fehlt — bootstrap.sh installiert es automatisch (npm-basiert)."
+  hint "Manueller Install: npm i -g @playwright/cli@latest && npx playwright install chromium"
+  WARNINGS=$((WARNINGS + 1))
+fi
+echo ""
+
+# =============================================================================
+# 8. Obsidian (optional — separate GUI-Install)
 # =============================================================================
 hdr "Obsidian"
 if [ -d "/Applications/Obsidian.app" ]; then
