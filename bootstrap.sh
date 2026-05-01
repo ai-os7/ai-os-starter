@@ -275,6 +275,23 @@ install_claude_files() {
     copy_skill_with_backup "$skill_dir" "$CLAUDE_DIR/skills/$(basename "$skill_dir")"
   done
 
+  # Skill-Deps: if a skill ships a package.json, install its node deps locally
+  if [ "$DRY_RUN" -eq 0 ] && command -v npm &>/dev/null; then
+    for skill_dir in "$CLAUDE_DIR/skills/"*/; do
+      [ -f "${skill_dir}package.json" ] || continue
+      if [ ! -d "${skill_dir}node_modules" ]; then
+        info "Installiere node-deps fuer skill $(basename "${skill_dir%/}")..."
+        (cd "$skill_dir" && npm install --silent --no-audit --no-fund 2>&1 | tail -3) || \
+          warn "npm install fuer $(basename "${skill_dir%/}") fehlgeschlagen"
+      fi
+    done
+  elif [ "$DRY_RUN" -eq 1 ]; then
+    for skill_dir in "$REPO_DIR/claude/skills/"*/; do
+      [ -f "${skill_dir}package.json" ] || continue
+      drylog "WUERDE npm install in skill $(basename "${skill_dir%/}")"
+    done
+  fi
+
   # Hooks
   for hook_file in "$REPO_DIR/claude/hooks/"*; do
     [ -f "$hook_file" ] || continue
