@@ -1,8 +1,8 @@
 ---
 name: wrap-up
-description: Beendet die Session und sichert das Wissen im Second Brain (Inbox-Files, STATE.md-Update, Vault-Log). Triggert wenn jemand sagt "lass uns Schluss machen", "Session beenden", "wir sind fertig", "session wrap up", "speicher das alles", oder explizit "/wrap-up" tippt.
+description: Beendet die Arbeits-Session sauber — extrahiert Decisions, Learnings und offene Punkte aus dem Konversationsverlauf, schreibt sie als Inbox-Files in den Second Brain, aktualisiert .planning/STATE.md und ergaenzt den Vault-Log. Nutze diesen Skill IMMER wenn der User signalisiert dass die Session zu Ende geht — auch ohne das Wort "wrap-up", z.B. bei "lass uns Schluss machen", "wir sind fertig", "session ist durch", "speicher das alles", "ich mach Feierabend", "sicher das ab", "das war's fuer heute". Auto-invoke speziell wenn nach einer langen Arbeitsphase Decisions oder Learnings entstanden sind, die sonst verloren gingen.
 when_to_use: |
-  Trigger-Phrasen: "lass uns Schluss machen", "Session beenden", "wir sind fertig", "wrap up", "session ist durch", "sicher das ab", "speichere die Session", "/wrap-up". Nicht triggern wenn der User nur "fertig" als Antwort auf eine andere Frage sagt — Kontext beachten.
+  Trigger-Phrasen: "lass uns Schluss machen", "Session beenden", "wir sind fertig", "wrap up", "session ist durch", "sicher das ab", "speichere die Session", "ich mach Feierabend", "das war's fuer heute", "/wrap-up". Nicht triggern wenn der User nur "fertig" als Antwort auf eine konkrete Aufgabe sagt — Kontext beachten, Session-Ende vs. Aufgaben-Ende unterscheiden.
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Bash(grep:*), Bash(ls:*)
 ---
 

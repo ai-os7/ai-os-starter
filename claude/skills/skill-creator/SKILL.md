@@ -1,14 +1,26 @@
 ---
 name: skill-creator
-description: Hilft dir, einen wiederkehrenden Workflow als Claude Code Skill anzulegen oder einen bestehenden Slash-Command zu einem Skill zu migrieren. Triggert wenn jemand sagt "ich mache X taeglich", "automatisier das", "mach daraus einen Skill", "ich kopier immer denselben Prompt", "Claude soll sich merken", "wiederkehrend", "bau mir einen Skill", "neues Skill anlegen", "migriere den Command zum Skill".
+description: Baut aus einem wiederkehrenden Workflow einen sauberen, token-effizienten Claude Code Skill — interaktiver Wizard fuer Cold-Start, schnelle Inferenz fuer Warm-Start, Migration von Slash-Command → Skill. Nutze diesen Skill IMMER wenn der User wiederkehrende Arbeit beschreibt oder sagt "ich mache X taeglich", "ich kopier immer denselben Prompt", "Claude soll sich merken", "automatisier das", "bau mir einen Skill", "mach daraus einen Skill", "command zu skill migrieren" — selbst wenn er nicht explizit das Wort "Skill" sagt. Auch bei "wie kann ich das wiederholbar machen", "ich mache das jeden Montag", "kannst du dir das merken" auto-invoken.
 when_to_use: |
-  Trigger-Phrasen (Deutsch): "automatisier das", "mach daraus einen Skill", "ich mache das taeglich", "Claude soll sich merken", "wiederkehrend", "bau mir einen Skill", "skill anlegen", "skill erstellen", "command zu skill migrieren", "skill-creator". Englisch ebenfalls erlaubt: "build me a skill", "automate this", "turn into a skill".
+  Trigger-Phrasen (Deutsch): "automatisier das", "mach daraus einen Skill", "ich mache das taeglich", "Claude soll sich merken", "wiederkehrend", "bau mir einen Skill", "skill anlegen", "skill erstellen", "command zu skill migrieren", "ich kopier immer denselben Prompt", "wie mach ich das wiederholbar". Englisch: "build me a skill", "automate this", "turn into a skill", "make this repeatable", "remember this workflow". Auto-invoke auch bei impliziten Triggern: User beschreibt Routine ("jeden Montag pruefe ich..."), kopiert Prompts mehrfach, fragt "kannst du dir das merken".
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Bash(mkdir:*), Bash(ls:*), Bash(rm:*), Bash(cp:*)
 ---
 
 # Skill Creator
 
 Du baust aus einem wiederkehrenden Workflow einen sauberen, token-effizienten Claude Code Skill. Adaptiv: wenn der User schon viel Kontext geliefert hat, springst du direkt zur Verifikation. Wenn er nur "bau mir einen Skill" sagt, fuehrst du ihn durch einen kompakten Wizard.
+
+## Wie ein Skill geladen wird (Progressive Disclosure)
+
+Skills haben drei Lade-Stufen — wichtig fuer Body-Laenge:
+
+| Stufe | Was wird geladen | Wann |
+|---|---|---|
+| **Metadata** | `name` + `description` (~50 tokens) | Immer im Kontext, bei jedem User-Prompt |
+| **Body** | Komplette `SKILL.md` (~500-2000 tokens) | Erst wenn der Skill auto-invoked oder via Slash gerufen wird |
+| **Bundled Files** | `references/*.md`, `examples/*.md`, `scripts/*` | Nur wenn der Skill-Body sie aktiv liest |
+
+**Folge fuer Skill-Design:** Body kompakt halten, Details die nur in Spezialfaellen gebraucht werden in `references/` lazy-load. Description darf "pushy" sein (zaehlt nur 50 tokens, wirkt als Trigger-Anker), Body soll Schritte und Logik enthalten, Referenzen sind on-demand.
 
 ## Modus-Erkennung (immer als erstes)
 
@@ -157,6 +169,15 @@ AskUserQuestion: "Anlegen?"
 - "Ja, anlegen"
 - "Nein, abbrechen"
 
+## Communication-Style-Calibration (vor jeder User-Frage)
+
+Bevor du AskUserQuestion oder offene Folge-Fragen stellst, kalibriere kurz das Sprachniveau des Users:
+
+- **Tech-Vokabular** (User sagt "MCP", "YAML-Frontmatter", "tool-call") → du kannst direkt mit Begriffen arbeiten.
+- **Non-Tech-Vokabular** (User beschreibt Workflow in Klartext, fragt nach Prompts statt nach Tools) → benutze nur Klartext, erklaere Begriffe in einem halben Satz wenn unvermeidbar ("YAML-Frontmatter ist ein kleiner Konfig-Block oben in der Datei"), zeige nie YAML-Beispiele die der User selbst tippen soll.
+
+Diese Kalibrierung passt nur die Frage-Sprache an, nicht den finalen Skill-Body. Der Skill-Body folgt unten den Schreibregeln.
+
 ## Skill schreiben
 
 Wenn YAML-Felder unklar sind, lies `references/frontmatter-cheatsheet.md`. Wenn die Primitiv-Wahl unklar ist (Skill / Subagent), lies `references/decision-tree.md`.
@@ -189,11 +210,22 @@ allowed-tools: <liste>
 <Beispiel kompakt>
 ```
 
-**Body-Regeln:**
-- < 200 Zeilen Total
-- Schritte nummeriert + aktiv formuliert
-- Lange Beispiele in `examples/<name>.md`, nicht inline
-- Inline-Tabellen nur fuer Quick-Reference (max 10 Zeilen)
+**Schreibregeln (mit Begruendung):**
+
+- **< 200 Zeilen Total** — laengere Bodies werden bei jedem Skill-Trigger geladen und kosten Tokens. Was selten gebraucht wird, gehoert in `references/`.
+- **Schritte nummeriert + aktiv formuliert** — der Skill-Body ist eine Anleitung an Claude, kein Lehrbuch. Aktive Verben ("Lies X", "Schreibe Y") triggern Tool-Use besser als passive Beschreibungen.
+- **Lange Beispiele in `examples/<name>.md`, nicht inline** — Beispiele sind erst beim konkreten Gebrauch noetig, das ist klassischer Lazy-Load-Fall.
+- **Inline-Tabellen nur fuer Quick-Reference (max 10 Zeilen)** — laengere Tabellen sprengen die 200-Zeilen-Grenze und schlagen den Skill-Body voll, ohne dass jeder Trigger die Tabelle braucht.
+
+**Description-Heuristik ("pushy" schreiben):** Schreib in `description` nicht nur was der Skill tut, sondern auch *wann* er invoken soll, inklusive impliziter Trigger. Beispiel:
+
+```
+description: <Was-er-tut>. Nutze diesen Skill IMMER wenn <Trigger-Bedingung>, selbst wenn der User nicht explizit X sagt. Auch bei <impliziter-Trigger-1>, <impliziter-Trigger-2> auto-invoken.
+```
+
+**Begruendung:** Skill-Auto-Invoke ist ein Recall-Problem. Eine knappe Description triggert nur bei woertlichem Match. Eine pushy Description erweitert das Trigger-Set, ohne den Body zu vergroessern (Description bleibt unter 100 tokens).
+
+**"Why" statt rigide MUSTs:** Wenn du im Skill-Body "ALWAYS X" oder "NEVER Y" in Caps schreibst, ist das ein Yellow-Flag — frag dich kurz, ob du den Grund nennen kannst. Mit Grund kann der Skill-User adaptiv reagieren wenn die Regel im Edge-Case nicht passt. Ohne Grund wird die Regel entweder blind befolgt oder ignoriert.
 
 ## Bericht nach Erstellung
 
@@ -213,6 +245,28 @@ Test jetzt:
 Hinweis: Falls Auto-Invoke nicht triggert, Claude Code restart noetig — brand-neue Skill-Verzeichnisse brauchen Reload.
 ```
 
+## Light-Test-Loop (optional — nach Erstellung anbieten)
+
+Nach erfolgreicher Erstellung **eine** AskUserQuestion:
+
+```
+question: "Willst du den Skill kurz testen? Wir spielen 2-3 realistische Prompts durch, du sagst was nicht passt, ich verbessere."
+options:
+  - "Ja, kurzer Test-Lauf"
+  - "Nein, ich teste selbst spaeter"
+```
+
+Bei "Ja":
+
+1. Schlage 2-3 konkrete Test-Prompts vor (basierend auf den Trigger-Phrasen + Input/Output aus dem Wizard).
+2. Pro Prompt: User tippt ihn. Du beobachtest Skill-Verhalten. User sagt qualitativ was passt / nicht passt.
+3. Eine Iteration: aus dem Feedback Skill-Body anpassen (Edit-Tool).
+4. Stop nach max 1 Iteration — wenn nach 1 Iteration noch Probleme: "Skill ist gut genug fuer den Anfang, du verbesserst ihn organisch beim naechsten echten Gebrauch."
+
+**Begruendung:** Skill-Quality ist iterativ, perfekter erster Wurf ist unrealistisch. Aber 1 Iteration faengt die offensichtlichen Trigger-Lecks und Tool-Mapping-Fehler ab. Mehr als 1 Iteration ohne echten Gebrauch ist Over-Engineering.
+
+**Kein** Subagent-Eval-Loop, **kein** benchmark.json, **kein** HTML-Viewer. Das ist Skill-Quality-Lab-Niveau und Overkill fuer Workshop-Zielgruppe.
+
 ## Migrations-Modus (Spezialfall)
 
 User sagt "migriere mir den `<name>`-Command zum Skill" oder "mach aus dem Command einen Skill".
@@ -228,15 +282,16 @@ Workflow:
 7. AskUserQuestion: "Auch in ai-os-starter spiegeln?" (Ja / Nein)
 8. Bei Ja: `cp -r ~/.claude/skills/<name> ~/Desktop/projects/ai-os-starter/claude/skills/` + `rm ~/Desktop/projects/ai-os-starter/claude/commands/<name>.md`
 
-## Anti-Patterns (vermeiden)
+## Anti-Patterns (mit Begruendung)
 
-- Skill ohne Trigger-Phrasen → wird nie auto-invoked
-- SKILL.md > 500 Zeilen → token-teuer + schwer wartbar
-- Lange Beispiele inline statt in `examples/`
-- Sprache mischen (User arbeitet in Deutsch → Trigger-Phrasen in Deutsch, nicht Englisch)
-- Hardcoded Listen die woanders schon Single-Source-of-Truth sind
-- Vergessen den User vor `Write` zu fragen
-- Im Wizard-Modus mehr als 5 Fragen stellen — kuerzer ist besser
+- **Skill ohne Trigger-Phrasen** — wird nie auto-invoked, der User muss den Slash-Command kennen, das macht den Skill unsichtbar.
+- **SKILL.md > 500 Zeilen** — token-teuer (laedt bei jedem Trigger), schwer wartbar, schwer zu lesen. Verschiebe Detail-Material in `references/`.
+- **Lange Beispiele inline statt in `examples/`** — Beispiele sind klassischer Lazy-Load-Fall (siehe Progressive-Disclosure oben).
+- **Sprache mischen** — User arbeitet in Deutsch, Trigger-Phrasen aber Englisch → Auto-Invoke greift seltener weil User-Phrasen nicht matchen.
+- **Hardcoded Listen die woanders schon Single-Source-of-Truth sind** — Drift-Risiko, wenn die Quelle aktualisiert wird vergisst man die Kopie.
+- **Vergessen den User vor `Write` zu fragen** — Skill-Anlegen ist ein nicht-trivialer Side-Effect, ohne Confirmation-Gate ueberraschst du den User.
+- **Im Wizard-Modus mehr als 5 Fragen** — der User verliert Geduld, kuerzer ist besser. Wenn du nach 5 Fragen noch unsicher bist, frag offen statt Multiple-Choice.
+- **Caps-Imperative ("ALWAYS X", "NEVER Y") ohne Grund** — wirkt rigide und verhindert dass der Skill in Edge-Cases adaptiv reagiert. Schreib statt "ALWAYS X" lieber "Tu X, weil sonst Y passiert".
 
 ## Weiterfuehrend
 

@@ -1,8 +1,8 @@
 ---
 name: resume
-description: Stellt den Arbeitskontext fuer das aktuelle Projekt wieder her aus STATE.md, Vault-Session-Logs, offenen Action-Items, juengsten Decisions und Vault-Timeline. Triggert wenn jemand sagt "lass uns weitermachen", "wo waren wir", "Kontext wiederherstellen", "wir starten neu in dem Projekt", oder explizit "/resume" tippt.
+description: Stellt den Arbeitskontext fuer das aktuelle Projekt wieder her aus STATE.md, Vault-Session-Logs, offenen Action-Items, juengsten Decisions und der Vault-Timeline. Nutze diesen Skill IMMER zu Session-Beginn wenn der User nicht klar sagt was er machen will, oder wenn er einsteigend wirkt — auch ohne explizit "resume" zu sagen. Trigger-Beispiele: "lass uns weitermachen", "wo waren wir", "Kontext wiederherstellen", "wir starten neu", "was war zuletzt", "moin", "wir machen heute weiter mit X", "was steht an". Auto-invoke besonders bei kalten Session-Starts ohne konkrete Aufgabe.
 when_to_use: |
-  Trigger-Phrasen: "lass uns weitermachen", "wo waren wir", "Kontext wiederherstellen", "wir starten neu", "session start", "was war zuletzt", "/resume". Idealerweise zu Session-Beginn — wenn die Session schon laeuft und User nur ein Detail abfragt, NICHT triggern.
+  Trigger-Phrasen: "lass uns weitermachen", "wo waren wir", "Kontext wiederherstellen", "wir starten neu", "session start", "was war zuletzt", "was steht an", "moin", "was machen wir heute", "/resume". Idealerweise zu Session-Beginn — wenn die Session schon laeuft und User nur ein Detail abfragt, NICHT triggern (Aufgaben-Frage vs. Session-Restoration unterscheiden).
 allowed-tools: Read, Glob, Grep, Bash(grep:*), Bash(find:*), Bash(ls:*), Bash(head:*), Bash(tail:*), Bash(awk:*)
 ---
 

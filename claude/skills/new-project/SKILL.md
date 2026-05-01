@@ -1,8 +1,8 @@
 ---
 name: new-project
-description: Setzt ein neues Projekt, eine Area oder ein laufendes Thema schlank auf — CLAUDE.md, .planning/STATE.md, Vault-Notiz und project-repos.yaml-Eintrag in einem Rutsch. Triggert wenn jemand sagt "neues Projekt aufsetzen", "neue Area", "neues Thema starten", "ich starte was Neues", "leg ein Projekt an", "/new-project".
+description: Setzt ein neues Projekt, eine Area oder ein laufendes Thema schlank auf — CLAUDE.md, .planning/STATE.md, Vault-Notiz und project-repos.yaml-Eintrag in einem Rutsch. Nutze diesen Skill IMMER wenn der User ein neues Vorhaben startet, eine neue Area anlegt oder ein laufendes Thema strukturieren will — auch ohne das Wort "Projekt", z.B. bei "ich starte was Neues", "ich hab da was Neues vor", "leg das mal an", "lass uns das aufsetzen", "ich brauch eine Struktur dafuer", "wo soll ich das ablegen". Auto-invoke besonders wenn der User in einem Ordner arbeitet der noch keine CLAUDE.md hat und ueber laengere Arbeit am Thema spricht.
 when_to_use: |
-  Trigger-Phrasen: "neues Projekt aufsetzen", "neue Area", "neues Thema starten", "leg ein Projekt an", "ich starte was Neues", "Projekt-Skeleton bauen", "/new-project". Annahme: User ist im richtigen Projekt-Ordner (CWD = Projekt-Stamm). Wenn User Phasen/Requirements/Roadmap braucht, am Ende auf /gsd:new-project verweisen.
+  Trigger-Phrasen: "neues Projekt aufsetzen", "neue Area", "neues Thema starten", "leg ein Projekt an", "ich starte was Neues", "ich brauch Struktur fuer X", "lass uns das aufsetzen", "Projekt-Skeleton bauen", "/new-project". Annahme: User ist im richtigen Projekt-Ordner (CWD = Projekt-Stamm). Wenn User Phasen/Requirements/Roadmap braucht, am Ende auf /gsd:new-project verweisen.
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Bash(mkdir:*), Bash(grep:*), Bash(ls:*), Bash(date:*), Bash(pwd:*)
 ---
 
