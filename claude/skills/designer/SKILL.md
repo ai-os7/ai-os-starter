@@ -24,6 +24,17 @@ Pruefe `./STYLE-GUIDE.md` immer im Projekt-Root des aktuellen Working Directory.
 
 Lade Frage-Flow + Token-Schema aus `references/style-guide-builder.md`. Schreibe das Ergebnis nach `./STYLE-GUIDE.md`. Frontmatter + 5 Sektionen Pflicht: Brand-Personality, Color-Tokens, Typography-Tokens, Spacing+Layout, Komponenten-Patterns. **Nie ohne References-File arbeiten — der Token-Schema-Slot-Name muss exakt stimmen, sonst broken Render.**
 
+### Wie du fragst (HARTE REGEL)
+
+Stelle jede der 5 Fragen aus `references/style-guide-builder.md` **mit dem AskUserQuestion-Tool** (Multiple-Choice-Pills im UI). Pro Frage ein eigener AskUserQuestion-Aufruf, in der Reihenfolge Brand-Personality → Farb-Stimmung → Typografie → Spacing → Akzent-Charakter.
+
+**Verboten:**
+- Freitext-Aufzählungen wie "a) ... b) ... c) ..." im Chat-Output. Das umgeht die Multiple-Choice-UI und erzeugt schlechtere User-Antworten.
+- Eigene Bypass-Optionen wie "minimaler Default-Style-Guide", "Smoke-Test-Default", "schnelle Variante ohne Fragen". Solche Optionen stehen NICHT im References-File und sind nicht erlaubt.
+- Mehrere Fragen in einem AskUserQuestion-Aufruf bündeln. Eine Frage pro Aufruf.
+
+**Eine Ausnahme:** Wenn der User von sich aus explizit sagt "skip style-guide", "nimm einen Default", "keine Fragen jetzt", darfst du das Cool-Neutral-Default-Set aus `references/style-guide-builder.md` nehmen. Du sagst dann aber im Output explizit: "Kein Style-Guide-Builder gelaufen, ich habe Cool-Neutral-Default genommen. Du kannst später `update style-guide` aufrufen, um deinen echten Style-Guide aufzubauen."
+
 Sample-Upload-Pfad (Inspo-Files multimodal lesen) ist v2-Backlog. Wenn der User Inspo-Files hochlaedt: kurz erklaeren "Sample-Upload kommt in v2, fuer jetzt nutze ich die Bilder als Referenz im Frage-Flow" und dann zur interaktiven Variante.
 
 ## Render-Mode
@@ -77,10 +88,12 @@ Merke dir die PID, killst du am Ende. Dann arbeitest du mit `http://localhost:87
 
 ```bash
 playwright-cli open "http://localhost:8765/build/<name>.html"
-playwright-cli eval "document.querySelectorAll('.designer-page, .designer-slide, .designer-canvas').forEach((el,i)=>{ if(el.scrollHeight>el.clientHeight) console.log('Frame '+(i+1)+' overflow: '+(el.scrollHeight-el.clientHeight)+'px'); });"
+playwright-cli eval "Array.from(document.querySelectorAll('.designer-page, .designer-slide, .designer-canvas')).map((el,i)=>el.scrollHeight>el.clientHeight ? 'Frame '+(i+1)+' overflow '+(el.scrollHeight-el.clientHeight)+'px' : 'Frame '+(i+1)+' OK')"
 ```
 
-Wenn die Console "Frame N overflow"-Output zeigt: User informieren ("Frame 3 schneidet 142px ab — Content kuerzen oder Long-Form-Layout?").
+`playwright-cli eval` erwartet eine **einzelne Expression**, kein Multi-Statement-Block. Darum Array-Map (Expression) statt forEach mit if+console.log (Statements). Das Ergebnis kommt als Array im Tool-Output zurueck.
+
+Wenn ein Eintrag "Frame N overflow Xpx" zeigt: User informieren ("Frame 3 schneidet 142px ab — Content kuerzen oder Long-Form-Layout?").
 
 Workarounds bei konkretem Bug: `references/pdf-gotchas.md` (border-radius, Position-Override, Font-Settle, Banding).
 
@@ -186,5 +199,7 @@ Pruefe `~/.claude/skills/designer/node_modules/pdf-lib/` einmalig vor dem ersten
 ## Output-Verhalten
 
 Sag dem User in 1 Satz welchen Pfad du gewaehlt hast (Style-Guide-Mode / Render). Bei Render: nenne Format + Anzahl Frames + Output-Pfad. Bei scrollHeight-Warning: konkret "Frame 3 schneidet 142px unten ab — willst du den Content kuerzen oder Long-Form-Layout statt Slide?"
+
+**Accent-Targets-Hinweis:** Wenn der gerenderte Content keine Akzent-Targets nutzt (kein `*kursiv*`/`em`, kein `[Link]`, kein `> Blockquote`, kein `<span class="accent">`) → sag dem User am Ende explizit: "Style-Guide ist angewendet, aber dein Content nutzt keine Akzent-Elemente. Darum sieht das Resultat sehr schwarz/weiß aus. Wenn du den Akzent visuell sehen willst, fuege Italic/Links/Blockquotes ein." Verhindert dass der User "leerer Style-Guide" annimmt obwohl er greift.
 
 Erfolg ist nicht "Render lief durch" sondern "PDF sieht in Preview druckreif aus, der User nickt". Bei Zweifel: visuellen Check anfordern.
