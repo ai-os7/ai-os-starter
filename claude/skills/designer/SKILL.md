@@ -88,12 +88,17 @@ Merke dir die PID, killst du am Ende. Dann arbeitest du mit `http://localhost:87
 
 ```bash
 playwright-cli open "http://localhost:8765/build/<name>.html"
-playwright-cli eval "Array.from(document.querySelectorAll('.designer-page, .designer-slide, .designer-canvas')).map((el,i)=>el.scrollHeight>el.clientHeight ? 'Frame '+(i+1)+' overflow '+(el.scrollHeight-el.clientHeight)+'px' : 'Frame '+(i+1)+' OK')"
+playwright-cli eval "Array.from(document.querySelectorAll('.designer-page, .designer-slide, .designer-canvas')).map((el,i)=>{const kids=Array.from(el.children).filter(c=>getComputedStyle(c).position!=='absolute');const h=kids.reduce((m,c)=>Math.max(m,c.offsetTop+c.offsetHeight),0);return h>el.clientHeight ? 'Frame '+(i+1)+' overflow '+(h-el.clientHeight)+'px' : 'Frame '+(i+1)+' OK'})"
 ```
 
-`playwright-cli eval` erwartet eine **einzelne Expression**, kein Multi-Statement-Block. Darum Array-Map (Expression) statt forEach mit if+console.log (Statements). Das Ergebnis kommt als Array im Tool-Output zurueck.
+**Eval-Regeln (HARTE REGEL, kein Verstoss erlaubt):**
+- `playwright-cli eval` erwartet eine **einzelne JavaScript-Expression**. **Kein Semikolon ausserhalb von Arrow-Function-Bodies.** Nicht `foo(); bar()` als zwei Statements. Nicht `document.fonts.ready.then(...); Array.from(...)`. Wenn du Font-Settle willst, mach das in einem **separaten** eval-Aufruf vorher.
+- Verboten sind: top-level `;` zwischen Statements, top-level `var`/`let`/`const`, top-level `if`/`for`/`while`. Erlaubt sind: Array-Map mit Arrow-Bodies (die intern `;` enthalten duerfen), IIFE `(()=>{...})()`, ternaere Ausdruecke.
+- Bei einem SyntaxError: nicht zwanghaft retry — die Expression umbauen.
 
-Wenn ein Eintrag "Frame N overflow Xpx" zeigt: User informieren ("Frame 3 schneidet 142px ab — Content kuerzen oder Long-Form-Layout?").
+**Absolute-Children-Filter:** Der Pre-Check oben ignoriert absolute-positionierte Children (`.designer-ornament` etc.), weil die per Definition aus dem Container ragen koennen ohne dass das ein Layout-Problem ist. Nur in-flow-Children zaehlen fuer Overflow.
+
+Wenn ein Eintrag "Frame N overflow Xpx" zeigt: User informieren ("Frame 3 schneidet 142px ab — Content kuerzen oder Long-Form-Layout?"). Bei Werten unter 30px: meistens Rundungs-Rauschen, ignorieren.
 
 Workarounds bei konkretem Bug: `references/pdf-gotchas.md` (border-radius, Position-Override, Font-Settle, Banding).
 
@@ -163,6 +168,8 @@ Jedes Template ist eine eigenstaendige HTML-Datei mit:
 
 **Templates enthalten KEINE Design-Entscheidungen** (keine konkreten Farben, Schriften, Logos). Nur Geometrie + Slots + CSS-Var-Hooks. Design kommt aus `./STYLE-GUIDE.md`.
 
+**Erlaubte Template-Erweiterungen beim Render:** Wenn der Content eigenstaendige Bauteile braucht, die im Template nicht vorgesehen sind (Stat-Tiles, Cover-Layout, Hint-Listen, Section-Title-Hierarchien, Tabellen-Badges), darfst du sie in das `./build/<name>.html` einfuegen. Bedingung: sie nutzen **nur die existierenden CSS-Vars aus dem Style-Guide** (keine eigenen Farben/Schriften, keine `#hexCodes`, keine `font-family: "Foo"` ohne Var-Hook). Sag im Output-Verhalten kurz "Cover + Stat-Tiles + Lese-Hinweise eingefuegt", damit der User weiss was du dazuerfunden hast. Das Template selbst (`<skill-dir>/templates/...`) wird dabei NICHT veraendert — nur das einmalige Build-File.
+
 ## Trigger-Disziplin (Anti-Doppelung mit frontend-design)
 
 Du triggerst auf: Print, PDF, Slide, Deck, Flyer, Report, Social-Image, Carousel, Newsletter, Visitenkarte, Poster, Reel, Banner, Card.
@@ -193,7 +200,7 @@ Pruefe `~/.claude/skills/designer/node_modules/pdf-lib/` einmalig vor dem ersten
 
 - Du schreibst keine Design-Entscheidungen in `./STYLE-GUIDE.md` ohne den User zu fragen — Source-of-Truth-Disziplin.
 - Du baust kein neues Template-Format ohne Slot-Marker-Vertrag — sonst broken Render bei naechstem Rebuild.
-- Du speicherst Output nicht ausserhalb `./build/` und `./out/`. Wenn der User explizit anderen Pfad nennt: ok, aber sag es ihm.
+- **Output landet IMMER in `./out/`. Nicht in `./exports/`, `./output/`, `./pdf/`, oder einem anderen erfundenen Pfad.** Wenn der User explizit einen anderen Pfad nennt: nutze diesen und nenne ihn im Output. Aber niemals eigenmaechtig `./out/` umbenennen.
 - Du nutzt nicht WebFetch fuer Inspo-Sample-Upload (das ist v2-Backlog).
 
 ## Output-Verhalten
