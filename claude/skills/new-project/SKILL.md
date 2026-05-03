@@ -18,7 +18,8 @@ Minimum Viable Setup: **CLAUDE.md (Root), `.planning/STATE.md`, Vault-Notiz, pro
 
 ```
 Banner → Phase 0 (Existing-Files-Check) → Phase 0.5 (Kontext optional)
-  → Phase 1 (Luecken-Fragen) → Phase 2 (Write) → Phase 3 (Report)
+  → Phase 0.7 (Pfad-Wahl) → Phase 1 (pfadspezifische Luecken)
+  → Phase 2 (Write) → Phase 3 (Report + optionaler GSD-Handoff)
 ```
 
 ### Banner
@@ -40,8 +41,8 @@ Ich setze die Grundstruktur fuer dein neues Projekt auf:
 
 Projekt-Ordner: [CWD]
 
-Spaeter Phasen, Requirements oder Roadmap dazu?
-/gsd:new-project draufsetzen.
+Spaeter Phasen, Requirements oder Roadmap dazu? Bei "Komplexes
+Projekt" biete ich dir am Ende direkt an, /gsd:new-project zu starten.
 ```
 
 ### Phase 0: Existing-Files-Check
@@ -89,31 +90,79 @@ Aus dem Input diese Felder extrahieren (wenn ableitbar):
 
 In Phase 1 nur die fehlenden Felder erfragen.
 
-### Phase 1: Luecken fuellen
+### Phase 0.7: Pfad-Wahl
 
-Nur Felder fragen, die noch nicht aus Phase 0.5 extrahiert sind.
+Genau eine AskUserQuestion VOR allen anderen Lücken-Fragen. Bestimmt, wie viele Fragen du noch stellst und ob am Ende `/gsd:new-project` angeboten wird.
+
+```
+AskUserQuestion:
+  header: "Vorhaben"
+  question: "Was fuer ein Vorhaben legen wir an?"
+  options:
+    - label: "Komplexes Projekt mit Ziel und Enddatum"
+      description: "Venture, Client-Auftrag oder internes Projekt mit Phasen.
+                    Ich setze das Skeleton auf und biete am Ende an,
+                    direkt /gsd:new-project fuer Roadmap und Requirements zu starten."
+    - label: "Laufendes Thema / Area"
+      description: "Recherche, Community, Ongoing Ops — kein Enddatum,
+                    kein Roadmap-Bedarf."
+    - label: "Mini-Projekt / Sandbox"
+      description: "Schnell aufsetzen, nur Vault-Anker und minimales
+                    CLAUDE.md. Keine weiteren Detail-Fragen."
+```
+
+Routing:
+- "Komplexes Projekt..."  → **PATH_A**
+- "Laufendes Thema..."    → **PATH_B** (Typ ist hart `Area`)
+- "Mini-Projekt..."       → **PATH_C**
+
+Felder, die in Phase 0.5 bereits aus Kontext extrahiert wurden, NICHT erneut fragen.
+
+### Phase 1: Pfadspezifische Lücken-Fragen
+
+#### PATH_A — Komplexes Projekt
 
 | # | Frage | Modus |
 |---|---|---|
 | 1 | "Wie heisst das Projekt?" | freeform |
 | 2 | "Beschreib in 1-2 Saetzen worum es geht." | freeform |
-| 3 | "Welcher Typ passt am besten?" | AskUserQuestion, 4 Options |
+| 3 | "Welcher Sub-Typ passt?" | AskUserQuestion, 3 Options |
 | 4 | "Sprache?" | AskUserQuestion, 3 Options |
-| 5 | Typ-spezifischer Follow-up (1 Frage) | freeform |
 
 **Frage 3 Options:**
 - **Venture** — Eigenes Produkt, Service, Firma aufbauen
 - **Client** — Dienstleistung fuer externen Kunden
 - **Internal** — Internes Projekt mit Enddatum (Steuern, Marketing, Ops)
-- **Area** — Laufendes Thema ohne Enddatum (Recherche, Community, Ongoing Ops)
 
 **Frage 4 Options:** Deutsch / Englisch / Gemischt.
 
-**Frage 5 pro Typ:**
-- Venture → "Was ist das Kernangebot?"
-- Client → "Was ist die Dienstleistung? Wer ist der Auftraggeber?"
-- Internal → "Was ist das Ziel?"
-- Area → "Welches Thema deckt das ab?"
+KEIN Typ-spezifischer Follow-up — Detail-Fragen kommen in `/gsd:new-project`.
+
+`TYP_DETAIL_LINE` = `**Details:** werden durch /gsd:new-project ergaenzt`
+`VAULT_FOLDER` = `02_Projects`
+
+#### PATH_B — Laufendes Thema / Area
+
+| # | Frage | Modus |
+|---|---|---|
+| 1 | "Wie heisst die Area?" | freeform |
+| 2 | "Beschreib in 1-2 Saetzen worum es geht." | freeform |
+| 3 | "Sprache?" | AskUserQuestion, 3 Options |
+| 4 | "Welches Thema deckt das ab?" | freeform |
+
+`Typ` = `Area` (hart, nicht abfragen)
+`TYP_DETAIL_LINE` = `**Thema:** {{Antwort Frage 4}}`
+`VAULT_FOLDER` = `03_Areas`, Frontmatter `type: area`, `status: ongoing`
+
+#### PATH_C — Mini-Projekt / Sandbox
+
+| # | Frage | Modus |
+|---|---|---|
+| 1 | "Wie heisst das Mini-Projekt?" | freeform |
+| 2 | "Beschreib in einem Satz worum es geht." | freeform |
+
+Defaults: Sprache = Deutsch, `TYP_DETAIL_LINE` = leer, `Typ` = "Mini"
+`VAULT_FOLDER` = `02_Projects`, `type: project`, `status: in-progress`
 
 ### Phase 2: Write
 
@@ -170,10 +219,38 @@ Typ: {{TYP}}
 | Repo-YAML    | [ergaenzt | kein Repo | Duplikat]   |
 
 ───────────────────────────────────────────────────────
+```
 
-Optional naechster Schritt:
-  /gsd:new-project  → Phasen, Requirements, Roadmap
-                      (ueberschreibt STATE.md mit GSD-Version, safe)
+**Pfadspezifischer Footer:**
+
+#### PATH_A — GSD-Handoff anbieten
+
+Direkt nach dem Report-Block:
+
+```
+AskUserQuestion:
+  header: "Naechster Schritt"
+  question: "Skeleton steht. Direkt /gsd:new-project starten? Der stellt
+             die Tiefenfragen (Ziel, Scope, Constraints, Erfolgskriterien)
+             und legt PROJECT.md + ROADMAP.md + Phases an."
+  options:
+    - label: "Ja, jetzt starten"
+      description: "Ich fuehre /gsd:new-project direkt im Anschluss aus."
+    - label: "Spaeter"
+      description: "Ich pausiere hier. Du kannst /gsd:new-project jederzeit selbst aufrufen."
+```
+
+Bei "Ja, jetzt starten": **im selben Turn** den `/gsd:new-project`-Workflow ausführen (Workflow-File: `~/.claude/get-shit-done/workflows/new-project.md`). Verwende den bereits erfassten Projektnamen, die Beschreibung und den Sub-Typ als Kontext, sodass GSD nicht von vorne fragt — direkt in die Tiefenfragen einsteigen.
+
+Bei "Spaeter": Ende.
+
+#### PATH_B / PATH_C — Kein GSD-Handoff
+
+Nach dem Report-Block einfach ergänzen:
+
+```
+Optional spaeter:
+  /gsd:new-project  → falls doch Phasen/Roadmap noetig werden
 ```
 
 ## Regeln
