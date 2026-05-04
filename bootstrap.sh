@@ -439,7 +439,7 @@ install_gsd() {
   fi
 
   if npx -y get-shit-done-cc --global 2>&1; then
-    info "GSD-Framework installiert (Commands: /gsd:* in Claude Code verfuegbar)"
+    info "GSD-Framework installiert (Commands: /gsd-* in Claude Code verfuegbar)"
     COUNT_NEW=$((COUNT_NEW + 1))
   else
     warn "GSD-Install ueber npx ist gescheitert — manueller Retry: npx -y get-shit-done-cc --global"

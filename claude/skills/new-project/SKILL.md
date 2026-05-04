@@ -2,7 +2,7 @@
 name: new-project
 description: Setzt ein neues Projekt, eine Area oder ein laufendes Thema schlank auf — CLAUDE.md, .planning/STATE.md, Vault-Notiz und project-repos.yaml-Eintrag in einem Rutsch. Nutze diesen Skill IMMER wenn der User ein neues Vorhaben startet, eine neue Area anlegt oder ein laufendes Thema strukturieren will — auch ohne das Wort "Projekt", z.B. bei "ich starte was Neues", "ich hab da was Neues vor", "leg das mal an", "lass uns das aufsetzen", "ich brauch eine Struktur dafuer", "wo soll ich das ablegen". Auto-invoke besonders wenn der User in einem Ordner arbeitet der noch keine CLAUDE.md hat und ueber laengere Arbeit am Thema spricht.
 when_to_use: |
-  Trigger-Phrasen: "neues Projekt aufsetzen", "neue Area", "neues Thema starten", "leg ein Projekt an", "ich starte was Neues", "ich brauch Struktur fuer X", "lass uns das aufsetzen", "Projekt-Skeleton bauen", "/new-project". Annahme: User ist im richtigen Projekt-Ordner (CWD = Projekt-Stamm). Wenn User Phasen/Requirements/Roadmap braucht, am Ende auf /gsd:new-project verweisen.
+  Trigger-Phrasen: "neues Projekt aufsetzen", "neue Area", "neues Thema starten", "leg ein Projekt an", "ich starte was Neues", "ich brauch Struktur fuer X", "lass uns das aufsetzen", "Projekt-Skeleton bauen", "/new-project". Annahme: User ist im richtigen Projekt-Ordner (CWD = Projekt-Stamm). Wenn User Phasen/Requirements/Roadmap braucht, am Ende auf /gsd-new-project verweisen.
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Bash(mkdir:*), Bash(grep:*), Bash(ls:*), Bash(date:*), Bash(pwd:*)
 ---
 
@@ -12,7 +12,7 @@ Minimum Viable Setup: **CLAUDE.md (Root), `.planning/STATE.md`, Vault-Notiz, pro
 
 **Annahme:** Wer diesen Skill ausfuehrt, ist im richtigen Projekt-Ordner (CWD = Projekt-Stamm). Wer kein Projekt-Verzeichnis will, nutzt den Skill nicht und legt Notizen direkt im Vault an.
 
-**Wenn der User Phasen, Requirements und Roadmap braucht:** am Ende auf `/gsd:new-project` verweisen.
+**Wenn der User Phasen, Requirements und Roadmap braucht:** am Ende auf `/gsd-new-project` verweisen.
 
 ## Flow
 
@@ -42,7 +42,7 @@ Ich setze die Grundstruktur fuer dein neues Projekt auf:
 Projekt-Ordner: [CWD]
 
 Spaeter Phasen, Requirements oder Roadmap dazu? Bei "Komplexes
-Projekt" biete ich dir am Ende direkt an, /gsd:new-project zu starten.
+Projekt" biete ich dir am Ende direkt an, /gsd-new-project zu starten.
 ```
 
 ### Phase 0: Existing-Files-Check
@@ -92,7 +92,7 @@ In Phase 1 nur die fehlenden Felder erfragen.
 
 ### Phase 0.7: Pfad-Wahl
 
-Genau eine AskUserQuestion VOR allen anderen Lücken-Fragen. Bestimmt, wie viele Fragen du noch stellst und ob am Ende `/gsd:new-project` angeboten wird.
+Genau eine AskUserQuestion VOR allen anderen Lücken-Fragen. Bestimmt, wie viele Fragen du noch stellst und ob am Ende `/gsd-new-project` angeboten wird.
 
 ```
 AskUserQuestion:
@@ -102,7 +102,7 @@ AskUserQuestion:
     - label: "Komplexes Projekt mit Ziel und Enddatum"
       description: "Venture, Client-Auftrag oder internes Projekt mit Phasen.
                     Ich setze das Skeleton auf und biete am Ende an,
-                    direkt /gsd:new-project fuer Roadmap und Requirements zu starten."
+                    direkt /gsd-new-project fuer Roadmap und Requirements zu starten."
     - label: "Laufendes Thema / Area"
       description: "Recherche, Community, Ongoing Ops — kein Enddatum,
                     kein Roadmap-Bedarf."
@@ -136,9 +136,9 @@ Felder, die in Phase 0.5 bereits aus Kontext extrahiert wurden, NICHT erneut fra
 
 **Frage 4 Options:** Deutsch / Englisch / Gemischt.
 
-KEIN Typ-spezifischer Follow-up — Detail-Fragen kommen in `/gsd:new-project`.
+KEIN Typ-spezifischer Follow-up — Detail-Fragen kommen in `/gsd-new-project`.
 
-`TYP_DETAIL_LINE` = `**Details:** werden durch /gsd:new-project ergaenzt`
+`TYP_DETAIL_LINE` = `**Details:** werden durch /gsd-new-project ergaenzt`
 `VAULT_FOLDER` = `02_Projects`
 
 #### PATH_B — Laufendes Thema / Area
@@ -230,17 +230,17 @@ Direkt nach dem Report-Block:
 ```
 AskUserQuestion:
   header: "Naechster Schritt"
-  question: "Skeleton steht. Direkt /gsd:new-project starten? Der stellt
+  question: "Skeleton steht. Direkt /gsd-new-project starten? Der stellt
              die Tiefenfragen (Ziel, Scope, Constraints, Erfolgskriterien)
              und legt PROJECT.md + ROADMAP.md + Phases an."
   options:
     - label: "Ja, jetzt starten"
-      description: "Ich fuehre /gsd:new-project direkt im Anschluss aus."
+      description: "Ich fuehre /gsd-new-project direkt im Anschluss aus."
     - label: "Spaeter"
-      description: "Ich pausiere hier. Du kannst /gsd:new-project jederzeit selbst aufrufen."
+      description: "Ich pausiere hier. Du kannst /gsd-new-project jederzeit selbst aufrufen."
 ```
 
-Bei "Ja, jetzt starten": **im selben Turn** den `/gsd:new-project`-Workflow ausführen (Workflow-File: `~/.claude/get-shit-done/workflows/new-project.md`). Verwende den bereits erfassten Projektnamen, die Beschreibung und den Sub-Typ als Kontext, sodass GSD nicht von vorne fragt — direkt in die Tiefenfragen einsteigen.
+Bei "Ja, jetzt starten": **im selben Turn** den `/gsd-new-project`-Workflow ausführen (Workflow-File: `~/.claude/get-shit-done/workflows/new-project.md`). Verwende den bereits erfassten Projektnamen, die Beschreibung und den Sub-Typ als Kontext, sodass GSD nicht von vorne fragt — direkt in die Tiefenfragen einsteigen.
 
 Bei "Spaeter": Ende.
 
@@ -250,7 +250,7 @@ Nach dem Report-Block einfach ergänzen:
 
 ```
 Optional spaeter:
-  /gsd:new-project  → falls doch Phasen/Roadmap noetig werden
+  /gsd-new-project  → falls doch Phasen/Roadmap noetig werden
 ```
 
 ## Regeln
