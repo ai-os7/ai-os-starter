@@ -10,7 +10,7 @@ Nach dem Setup hast du ein vollständiges, persönliches AI-OS: Claude Code mit 
 
 Du brauchst:
 
-- **macOS 13 (Ventura) oder neuer** — 14+ empfohlen
+- **macOS 14 (Sonoma) oder neuer**
 - **zsh als aktive Shell** (macOS-Default seit Catalina)
 - **git** (Xcode Command Line Tools)
 - **Claude Code** — Anthropic Installer
@@ -58,7 +58,6 @@ Read-only Check. Ändert nichts. Output zeigt grüne Häkchen für alles was sch
 
 - **Claude-Code-PATH:** Der Anthropic-Installer schreibt PATH-Hinweise nach `~/.bashrc`, auch wenn du zsh nutzt. Preflight gibt dir den korrekten Fix für deine Shell aus.
 - **Homebrew auf Apple Silicon vs Intel:** Unterschiedliche `brew shellenv`-Pfade. Preflight kennt beide Varianten.
-- **macOS 13:** Homebrew warnt, läuft aber. Update auf 14+ wenn möglich.
 
 ### Schritt 3: Dry-Run (Bootstrap-Vorschau)
 
@@ -111,7 +110,7 @@ claude
 In der Claude-REPL:
 - `/help` → Slash-Commands sichtbar
 - `/brain:health-check` → Vault-Sanity-Check
-- `/gsd:help` → GSD-Reference (falls Node installiert)
+- `/gsd-help` → GSD-Reference (falls Node installiert)
 
 Falls du Cursor nutzen willst: erst jetzt Cursor öffnen — bei aktivem Cursor-Plugin **Cursor neu starten**, damit die frische `~/.claude/`-Config geladen wird.
 
@@ -134,7 +133,7 @@ Falls du Cursor nutzen willst: erst jetzt Cursor öffnen — bei aktivem Cursor-
 - Kopiert `claude/hooks/*` → `~/.claude/hooks/` + setzt `chmod +x`
 - Erstellt `~/Documents/Second-Brain/` Ordnerstruktur (PARA: 00_Meta, 01_Inbox, 02_Projects, 03_Areas, 04_Resources, 05_Contacts, 06_Archive)
 - Legt Templates und vault-index/log an (nur wenn noch nicht vorhanden)
-- Installiert **GSD-Framework** via `npx -y get-shit-done-cc --global` (Slash-Commands `/gsd:*`)
+- Installiert **GSD-Framework** via `npx -y get-shit-done-cc --global` (Slash-Commands `/gsd-*`)
 - Installiert **playwright-cli** via `npm i -g @playwright/cli` + Chromium-Browser + Microsofts gepflegte Playwright-Skills (Browser-Automation, HTML-Verifikation, Screenshots)
 
 **Idempotent:** Zweiter Durchlauf nach erfolgreichem ersten → 0 Änderungen (alles bereits vorhanden).
@@ -197,7 +196,7 @@ ai-os-starter/
 │   ├── hooks/                # 7 Hook-Scripts
 │   └── participants/         # Per-TN Bundles — NICHT auto-installiert (manuelles cp beim Pre-Call)
 │
-│  GSD-Commands (/gsd:*) werden separat im Bootstrap via
+│  GSD-Commands (/gsd-*) werden separat im Bootstrap via
 │  npx -y get-shit-done-cc --global installiert — nicht im Repo.
 ├── vault-skeleton/           # Mappt zu ~/Documents/Second-Brain/
 │   ├── 00_Meta/
